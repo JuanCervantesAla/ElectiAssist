@@ -25,6 +25,4 @@ public class PythonController {
         return pythonService.executePythonAsync(data, "src/main/resources/scripts/script.py");
     }
 
-
-
 }
