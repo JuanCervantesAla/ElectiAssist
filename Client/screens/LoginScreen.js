@@ -19,7 +19,7 @@ const LoginScreen = () => {
 
     try {
 
-      const response = await fetch("http://localhost:8080/api/user/login", {
+      const response = await fetch("http://10.214.80.184:8080/api/user/login", {
         method:"POST",
         headers: {
           "Content-Type": "application/json",
