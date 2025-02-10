@@ -56,7 +56,7 @@ const RegistrationScreen = () => {
               <Text style={styles.buttonText}>Crear Cuenta</Text>
             </LinearGradient>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigation.navigate('IniciarSesion')}>
+          <TouchableOpacity onPress={() => navigation.navigate('LoginScreen')}>
             <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia Sesión</Text>
           </TouchableOpacity>
         </View>

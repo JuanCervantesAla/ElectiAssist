@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_URL } from '@env';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -16,10 +18,8 @@ const LoginScreen = () => {
       alert("Ingresa el correo y contrasena correctamente");
       return;
     }
-
     try {
-
-      const response = await fetch("http://localhost:8080/api/user/login", {
+      const response = await fetch(`${API_URL}/api/user/login`, {
         method:"POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,6 +30,8 @@ const LoginScreen = () => {
       const data = await response.json();
       if(response.ok){
         alert("Inicio de sesion exitoso");
+        const { token } = data;
+        await AsyncStorage.setItem("userToken", token); // Guardar el token
         navigation.navigate("Main");
       } else {
         alert(data.message || "Error al iniciar sesion");
