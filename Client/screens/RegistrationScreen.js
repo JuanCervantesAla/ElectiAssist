@@ -50,7 +50,7 @@ const RegistrationScreen = () => {
           />
           <TouchableOpacity onPress={handleRegistration} style={styles.button}>
             <LinearGradient
-              colors={['#435058', '#4A5861', '#687C88', '#758C9A', '#91ADBE']}
+              colors={['#3d5146', '#2d3830']}
               style={styles.gradient}
             >
               <Text style={styles.buttonText}>Crear Cuenta</Text>
@@ -68,7 +68,7 @@ const RegistrationScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#e0e0e0',
   },
   scrollContainer: {
     flexGrow: 1,
@@ -82,14 +82,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#2d3830', // Verde oscuro
   },
   input: {
     height: 50,
-    borderColor: '#ccc',
+    borderColor: '#3d5146', // Verde claro
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
     marginBottom: 15,
+    backgroundColor: '#fff', // Fondo blanco para el input
+    color: '#2d3830', // Verde oscuro para el texto
   },
   button: {
     marginTop: 10,
@@ -98,15 +101,16 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
+    backgroundColor: '#3d5146', // Verde claro
   },
   buttonText: {
-    color: '#fff',
+    color: '#e0e0e0', // Hueso
     fontWeight: 'bold',
   },
   linkText: {
     marginTop: 15,
     textAlign: 'center',
-    color: '#435058',
+    color: '#3d5146', // Verde claro
   },
 });
 
