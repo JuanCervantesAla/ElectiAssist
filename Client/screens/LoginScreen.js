@@ -42,7 +42,7 @@ const LoginScreen = () => {
         alert("Inicio de sesion exitoso");
         const { token } = data;
         await AsyncStorage.setItem("userToken", token); // Guardar el token
-        navigation.navigate("Main");
+        navigation.navigate("ChatbotScreen");
       } else {
         alert(data.message || "Error al iniciar sesion");
       }
