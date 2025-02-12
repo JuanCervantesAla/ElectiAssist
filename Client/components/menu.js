@@ -1,11 +1,16 @@
 import React from 'react';
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const MenuOpciones = ({ icons, iconStyle, containerStyle }) => {
+const MenuOpciones = ({ icons, screens, iconStyle, containerStyle }) => {
+    const navigation = useNavigation();
+
     return (
         <View style={[styles.container, containerStyle]}>
             {icons.map((icon, index) => (
-                <Image key={index} source={icon} style={[styles.icon, iconStyle]} />
+                <TouchableOpacity key={index} onPress={() => navigation.navigate(screens[index])}>
+                    <Image source={icon} style={[styles.icon, iconStyle]} />
+                </TouchableOpacity>
             ))}
         </View>
     );
@@ -20,14 +25,10 @@ const styles = StyleSheet.create({
         padding: 10,
     },
     icon: {
-        width: 20,
-        height: 20,
+        width: 50, 
+        height: 50,
         resizeMode: 'contain',
     },
 });
 
-<<<<<<< HEAD
 export default MenuOpciones;
-=======
-export default MenuOpciones;
->>>>>>> 771e819 (Primer Merge)
