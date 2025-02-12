@@ -8,27 +8,29 @@ import {
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
+  Animated,
 } from "react-native";
 import { API_URL } from "@env";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from "react-native-vector-icons/MaterialIcons";
 
 const ChatbotScreen = () => {
-  const [messages, setMessages] = useState([]); // Almacena los mensajes
-  const [inputText, setInputText] = useState(""); // Almacena el texto del input
-  const flatListRef = useRef(null); // Referencia para el FlatList
+  const [messages, setMessages] = useState([]);
+  const [inputText, setInputText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const flatListRef = useRef(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  // Función para enviar un mensaje al chatbot
   const sendMessage = async () => {
-    if (!inputText.trim()) return; // Evita enviar mensajes vacíos
+    if (!inputText.trim()) return;
 
-    // Agrega el mensaje del usuario a la lista de mensajes
     const userMessage = { id: Date.now(), text: inputText, sender: "user" };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
-    setInputText(""); // Limpia el campo de entrada
-    console.log("Mensaje enviado:", inputText);
-
+    setInputText("");
+    setIsLoading(true);
+    console.log(`${API_URL}/api/chatbot/send`)
     try {
-      // Envía el mensaje a la API del chatbot
       const response = await fetch(`${API_URL}/api/chatbot/send`, {
         method: "POST",
         headers: {
@@ -38,9 +40,7 @@ const ChatbotScreen = () => {
       });
 
       const data = await response.json();
-
-      // Agrega la respuesta del chatbot a la lista de mensajes
-      const botMessage = { id: Date.now(), text: data.response, sender: "bot" }; //data["out-0"]
+      const botMessage = { id: Date.now(), text: data.response, sender: "bot" };
       setMessages((prevMessages) => [...prevMessages, botMessage]);
     } catch (error) {
       console.error("Error al enviar el mensaje:", error);
@@ -50,15 +50,24 @@ const ChatbotScreen = () => {
         sender: "bot",
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Efecto para desplazar la lista al final cuando se agregan nuevos mensajes
   useEffect(() => {
     if (flatListRef.current) {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   }, [messages]);
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
 
   return (
     <KeyboardAvoidingView
@@ -66,19 +75,25 @@ const ChatbotScreen = () => {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
+        {/* Encabezado */}
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Chatbot</Text>
+        </View>
+
         {/* Lista de mensajes */}
         <FlatList
           ref={flatListRef}
           data={messages}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View
-              style={
-                item.sender === "user" ? styles.userMessage : styles.botMessage
-              }
+            <Animated.View
+              style={[
+                item.sender === "user" ? styles.userMessage : styles.botMessage,
+                { opacity: fadeAnim },
+              ]}
             >
               <Text style={styles.messageText}>{item.text}</Text>
-            </View>
+            </Animated.View>
           )}
           contentContainerStyle={styles.messagesContainer}
         />
@@ -92,8 +107,16 @@ const ChatbotScreen = () => {
             placeholder="Escribe un mensaje..."
             placeholderTextColor="#999"
           />
-          <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-            <Text style={styles.sendButtonText}>Enviar</Text>
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={sendMessage}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Icon name="send" size={20} color="#fff" />
+            )}
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -110,31 +133,54 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#f5f5f5",
   },
+  header: {
+    backgroundColor: "#3d5146",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 20,
+    alignItems: "center",
+  },
+  headerText: {
+    color: "#fff",
+    fontSize: 20,
+    fontWeight: "bold",
+  },
   messagesContainer: {
     padding: 10,
   },
   userMessage: {
     alignSelf: "flex-end",
     backgroundColor: "#3d5146",
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 10,
     marginVertical: 5,
     maxWidth: "80%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   botMessage: {
     alignSelf: "flex-start",
     backgroundColor: "#e0e0e0",
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 10,
     marginVertical: 5,
     maxWidth: "80%",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   messageText: {
     color: "#fff",
   },
   inputContainer: {
     flexDirection: "row",
-    padding: 20,
+    padding: 10,
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderTopColor: "#ccc",
@@ -144,7 +190,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: "#ccc",
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 25,
     paddingHorizontal: 15,
     marginRight: 10,
   },
@@ -152,9 +198,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#3d5146",
-    borderRadius: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+    borderRadius: 25,
+    width: 50,
+    height: 50,
   },
   sendButtonText: {
     color: "#fff",
