@@ -1,10 +1,10 @@
-// src/navigation/AppNavigator.js
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from '../screens/LoginScreen';
 import RegistrationScreen from '../screens/RegistrationScreen';
 import HomeScreen from '../screens/HomeScreen';
 import MainScreen from '../screens/MainScreen';
+import ChatbotScreen from '../screens/ChatbotScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +29,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="MainScreen"
         component={MainScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ChatbotScreen"
+        component={ChatbotScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

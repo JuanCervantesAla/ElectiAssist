@@ -11,7 +11,10 @@ import Home from '../assets/home.png';
 import Search from '../assets/search.png';
 import Message from '../assets/message.png';
 import MenuOpciones from '../components/menu'
+<<<<<<< HEAD
 import Slider from '../components/Slider'
+=======
+>>>>>>> 771e819 (Primer Merge)
 import Tribunal from '../assets/tribunal.jpg'
 import Casilla from '../assets/casillas.png'
 import Candidato from '../assets/candidatos.jpg'
@@ -204,8 +207,13 @@ const styles = StyleSheet.create({
     },
     frontImage: {
         width: '250',
+<<<<<<< HEAD
         height: '405',
         borderRadius: 15,
+=======
+        height: '380',
+        borderRadius: 30,
+>>>>>>> 771e819 (Primer Merge)
         overflow: 'hidden',
         resizeMode: 'cover',
     },

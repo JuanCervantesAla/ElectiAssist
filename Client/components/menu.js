@@ -26,4 +26,8 @@ const styles = StyleSheet.create({
     },
 });
 
+<<<<<<< HEAD
 export default MenuOpciones;
+=======
+export default MenuOpciones;
+>>>>>>> 771e819 (Primer Merge)

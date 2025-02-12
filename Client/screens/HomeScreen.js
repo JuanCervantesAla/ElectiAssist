@@ -26,13 +26,13 @@ const HomeScreen = () => {
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
-      {/* Botón para pasar directo al main, este se debe borrar */}
+      {/* Botón para pasar directo al main, este se debe borrar
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('MainScreen')}
       >
         <Text style={styles.buttonText}>Ir al Main</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
     </View>
   );
