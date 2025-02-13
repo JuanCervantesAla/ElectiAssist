@@ -15,12 +15,20 @@ import Slider from '../components/Slider'
 import Tribunal from '../assets/tribunal.jpg'
 import Casilla from '../assets/casillas.png'
 import Candidato from '../assets/candidatos.jpg'
+import Icon from "react-native-vector-icons/AntDesign";
+// import { SliderBox } from "react-native-image-slider-box";
 
 
 const MainScreen = () => {
     // Estado para la búsqueda
     const [search, setSearch] = useState('');
-    const [pressedButtonIndex, setPressedButtonIndex] = useState(null); // Estado para el botón presionado
+    const [pressedButtonIndex, setPressedButtonIndex] = useState(null);
+
+    const images = [
+        Candidato,
+        Casilla,
+        Tribunal
+    ];
 
     // Navegación
     const navigation = useNavigation();
@@ -48,35 +56,36 @@ const MainScreen = () => {
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
 
-            <View style={styles.verticalView}>{/*Perfil y atras*/}
+            <View style={[styles.verticalView, {marginBottom: 40, marginTop: 20}]}>{/*Perfil y atras*/}
                 <View style={styles.horizontalView}>
+                    {/* Botón de retroceso */}
                     <TouchableOpacity
-                        style={styles.button}
-                        onPress={() => navigation.navigate('LoginScreen')}
+                    style={[styles.backButton, {marginLeft: 20}]}
+                    onPress={() => navigation.goBack()}
                     >
-                        <Text style={styles.buttonText}>Back</Text>
+                        <Icon name="leftcircle" style={styles.backButtonIcon} />
                     </TouchableOpacity>
-                    <Image source={ImageProfile} style={styles.profilePic} />
+                    <Image source={ImageProfile} style={[styles.profilePic, {marginRight: 20}]} />
                 </View>
             </View>
 
-            <View style={styles.verticalView}>{/*Titulo*/}
+            <View style={[styles.verticalView, {marginBottom: 25}]}>{/*Titulo*/}
                 <Text style={styles.title}>Menu de Inicio</Text>
             </View>
 
-            <View style={styles.verticalView}>
+            <View style={[styles.verticalView, {marginBottom: -15}]}>
                 <SearchBar
                     placeholder="Escribe aquí..."
                     onChangeText={(text) => updateSearch(text)}
                     value={search}
                     platform={Platform.OS === 'ios' ? 'ios' : 'android'}
-                    containerStyle={{ backgroundColor: 'transparent' }}
-                    inputContainerStyle={{ backgroundColor: '#fff', borderRadius: 25 }}
+                    containerStyle={ styles.searchBarContainer }
+                    inputContainerStyle={styles.searchBarInputContainer}
                 />
 
             </View>
 
-            <View style={styles.verticalView}>
+            <View style={[styles.verticalView, {marginBottom: 35}]}>
                 <View style={styles.horizontalViewButton}>
                     {["Candidato", "Casilla", "Proceso"].map((text, index) => (
                         <TouchableOpacity
@@ -92,32 +101,41 @@ const MainScreen = () => {
                 </View>
             </View>
 
-
-            <View style={[styles.verticalView, styles.centered]}>
-                <Image source={Candidato} style={styles.frontImage} />
-            </View> 
-
+            <View style={{ marginBottom: 20 }}> {/* Remove the verticalView style */}
+                {/* <SliderBox 
+                    images={images}
+                    sliderBoxHeight={200}
+                    dotColor={'#fff'}
+                    inactiveDotColor="#90A4AE"
+                    autoplay
+                    circleLoop
+                    resizeMode={'cover'}
+                    ImageComponentStyle={{ borderRadius: 15, width: "97%", marginTop: 5 }}
+                /> */}
+            </View>
 
             <View style={styles.verticalView}>
                 <MenuOpciones
                     icons={[Home, Search, Message, Profile]} 
                     iconStyle={{ width: 30, height: 30 }} 
-                    containerStyle={{ marginTop: 20 }}
+                    containerStyle={{ marginTop: 10 }}
                     screens={['ChatbotScreen','ChatbotScreen','ChatbotScreen','ChatbotScreen']} 
                 />
             </View>
         </KeyboardAvoidingView>
+        
+
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 15,
-        backgroundColor: '#e0e0e0',
+        padding: 10,
+        backgroundColor: '#F5F5F5',
     },
     verticalView: {
-        marginBottom: 20,
+        marginBottom: 15,
     },
     horizontalView: {
         flexDirection: 'row',
@@ -128,9 +146,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 40,
+        fontSize: 34,
         fontFamily: 'Montserrat_700Bold',
         fontWeight: 'bold',
+        paddingLeft: '5%'
     },
     button: {
         height: '50%',
@@ -149,25 +168,26 @@ const styles = StyleSheet.create({
         fontSize:12,
     },
     buttonSelect: {
-        height: 45,  // Altura ajustada
-        width: '30%',  // Mejor distribución
+        height: 45,
+        width: '30%',  
         marginTop: '5%',
         backgroundColor: '#fff',
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 8,
+        borderRadius: 3,
         elevation: 3,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 3,
-        paddingHorizontal: 10, // Reduce espacio extra
+        paddingHorizontal: 10,
+        
     },
     buttonSelectPressed: {
         height: 45,
         width: '30%',
         marginTop: '5%',
-        backgroundColor: '#000',
+        backgroundColor: '#10B981',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
@@ -195,7 +215,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     profilePic: {
-        width: '20%',
+        width: '17%',
         height: undefined,
         aspectRatio: 1,
     },
@@ -218,17 +238,38 @@ const styles = StyleSheet.create({
         
     },
     searchBarContainer: {
-        backgroundColor: 'transparent',
+        width:'95%',
+        backgroundColor: '#f5f5f5',
         borderTopWidth: 0,
         borderBottomWidth: 0,
-        padding: 0,
+        borderColor:'#000',
+        paddingLeft: '5%'
     },
     searchBarInputContainer: {
-        backgroundColor: '#fff',
-        borderRadius: 25,
+        backgroundColor: '#f5f5f5',
+        borderRadius: 12,
+        borderWidth: 2,
+        borderColor: '#000',
+        borderBottomWidth: 2,
+        borderBottomColor: '#000'
     },
     searchBarInput: {
         fontFamily: 'Montserrat_700Bold',
+    },
+    backButton: {
+        top: 15,
+        width: '12%',
+        height: undefined,
+        aspectRatio: 1,
+        borderRadius: 20,
+        backgroundColor: "#f5f5f5",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1,
+    },
+    backButtonIcon: {
+        color: "#10B981",
+        fontSize: 43, // Aumenté el tamaño para mejor visibilidad
     },
 });
 

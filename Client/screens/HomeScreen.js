@@ -19,7 +19,7 @@ const HomeScreen = () => {
       {/* Botón en la esquina inferior derecha */}
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('LoginScreen')}
+        onPress={() => navigation.navigate('MainScreen')}
       >
         <Text style={styles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
