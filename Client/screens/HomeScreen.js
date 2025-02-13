@@ -15,8 +15,6 @@ const HomeScreen = () => {
         style={styles.image}
         resizeMode="contain"
       />
-      {/* Título "ElectiAssist" */}
-      <Text style={styles.title}>ElectiAssist</Text>
 
       {/* Botón en la esquina inferior derecha */}
       <TouchableOpacity
@@ -41,7 +39,7 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e0e0e0', // Hueso
+    backgroundColor: '#445058', // Hueso
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -49,27 +47,28 @@ const styles = StyleSheet.create({
     fontSize: 50,
     fontWeight: 'bold',
     color: '#2d3830', // Beige
-    marginBottom: 20,
+    marginBottom: 200,
   },
   image: {
-    width: 300,
-    height: 300,
-    marginBottom: 40,
+    width: 800,
+    height: 1200,
+    marginBottom: 10,
   },
   button: {
     position: 'absolute',
-    bottom: 70,
-    right: 40,
-    backgroundColor: '#3d5146', // Verde claro
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 25,
-    elevation: 3, // Sombra en Android
-    shadowColor: '#000', // Sombra en iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-  },
+    bottom: 80, // Ajusta la distancia desde la parte inferior
+    left: '50%', // Lo posiciona en el centro de la pantalla
+    transform: [{ translateX: -75 }], // Mueve el botón hacia la izquierda la mitad de su ancho
+    backgroundColor: '#3d5146',
+    paddingVertical: 16, // Aumentado para hacerlo más grande
+    paddingHorizontal: 32, // Aumentado para hacerlo más ancho
+    borderRadius: 30, // Opcional, para mantenerlo redondeado
+    elevation: 5, // Mayor sombra en Android
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+  },  
   buttonText: {
     color: '#e0e0e0', // Hueso
     fontSize: 16,
