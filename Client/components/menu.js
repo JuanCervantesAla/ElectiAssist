@@ -8,9 +8,12 @@ const MenuOpciones = ({ icons, screens, iconStyle, containerStyle }) => {
     return (
         <View style={[styles.container, containerStyle]}>
             {icons.map((icon, index) => (
-                <TouchableOpacity key={index} onPress={() => navigation.navigate(screens[index])}>
-                    <Image source={icon} style={[styles.icon, iconStyle]} />
-                </TouchableOpacity>
+                <React.Fragment key={index}>
+                    <TouchableOpacity onPress={() => navigation.navigate(screens[index])}>
+                        <Image source={icon} style={[styles.icon, iconStyle]} />
+                    </TouchableOpacity>
+                    {index < icons.length - 1 && <View style={styles.verticalSeparator} />}
+                </React.Fragment>
             ))}
         </View>
     );
@@ -23,11 +26,20 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         flexWrap: 'wrap', 
         padding: 10,
+        borderWidth: 2,
+        borderColor:'#000',
+        borderRadius:40,
     },
     icon: {
         width: 50, 
         height: 50,
         resizeMode: 'contain',
+    },
+    verticalSeparator: {
+        width: 2,
+        height: '75%',
+        backgroundColor: '#000',
+        marginHorizontal: 10,
     },
 });
 

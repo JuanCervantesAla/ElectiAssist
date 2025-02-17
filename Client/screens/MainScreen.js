@@ -9,6 +9,8 @@ import Home from '../assets/home.png';
 import Search from '../assets/search.png';
 import Message from '../assets/message.png';
 import MenuOpciones from '../components/menu';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCheckToSlot, faLandmarkDome, faNewspaper } from '@fortawesome/free-solid-svg-icons';
 import Icon from "react-native-vector-icons/AntDesign";
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
@@ -18,7 +20,7 @@ const MainScreen = () => {
     const [search, setSearch] = useState('');
     const [activeIndex, setActiveIndex] = useState(0);
     const [pressedButtonIndex, setPressedButtonIndex] = useState(null);
-    const sliderWidth = 420; 
+    const sliderWidth = 380; 
     const itemWidth = 350;
     const itemHeight = 400;  
 
@@ -27,9 +29,9 @@ const MainScreen = () => {
     }, [activeIndex]);
 
     const [entries] = useState([
-        { title: 'Candidatos', illustration: { uri: 'https://media.istockphoto.com/id/1391693595/es/vector/hombre-y-mujer-político-debatiendo.jpg?s=1024x1024&w=is&k=20&c=QylXU_tli07ekkNuYYb4TGw4y8kkKXJ3Klpoj4_ptEM=' } },
-        { title: 'Casillas', illustration: { uri: 'https://oem.com.mx/elsoldetoluca/img/14738093/1685505486/BASE_LANDSCAPE/1200/voto.webp' } },
-        { title: 'Articulos', illustration: { uri: 'https://eljuegodelacorte.nexos.com.mx/wp-content/uploads/2023/04/constitucional.jpg' } },
+        { title: 'Candidatos', subTitle: 'Presidentes y Gobernadores', icon: faLandmarkDome , illustration: { uri: 'https://media.istockphoto.com/id/1391693595/es/vector/hombre-y-mujer-político-debatiendo.jpg?s=1024x1024&w=is&k=20&c=QylXU_tli07ekkNuYYb4TGw4y8kkKXJ3Klpoj4_ptEM=' } },
+        { title: 'Casillas', subTitle: 'Ubica tu casilla de voto', icon : faCheckToSlot , illustration: { uri: 'https://oem.com.mx/elsoldetoluca/img/14738093/1685505486/BASE_LANDSCAPE/1200/voto.webp' } },
+        { title: 'Articulos', subTitle: 'Conoce mas de la politica mexicana',icon : faNewspaper , illustration: { uri: 'https://eljuegodelacorte.nexos.com.mx/wp-content/uploads/2023/04/constitucional.jpg' } },
     ]);    
 
     const navigation = useNavigation();
@@ -52,13 +54,20 @@ const MainScreen = () => {
     const _renderItem = ({ item }) => (
         <View style={styles.slide}>
             <Image source={item.illustration} style={styles.imageCarousel} />
-            <Text style={styles.titleCarousel}>{item.title}</Text>
+            <View style={styles.insideText}>
+                <Text style={styles.titleCarousel}>{item.title}</Text>
+                <View style={[styles.horizontalView , {paddingLeft: 10, marginTop:15}]}>
+                    {item.icon && <FontAwesomeIcon icon={item.icon} size={30} color="white" />}
+                    <Text style={[styles.subtitleCarousel, {marginBottom: -5, paddingLeft: 15}]}>{item.subTitle}</Text>
+                </View>
+            </View>
         </View>
     );    
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-            <View style={[styles.verticalView, { marginBottom: 40, marginTop: 1 }]}>
+        
+            {/* <View style={[styles.verticalView, { marginBottom: 40, marginTop: 1 }]}>
                 <View style={styles.horizontalView}>
                     <TouchableOpacity
                         style={[styles.backButton, { marginLeft: 20 }]}
@@ -68,17 +77,30 @@ const MainScreen = () => {
                     </TouchableOpacity>
                     <Image source={ImageProfile} style={[styles.profilePic, { marginRight: 20 }]} />
                 </View>
-            </View>
+            </View> */}
 
             {/* Title Section */}
-            <View style={[styles.verticalView, { marginBottom: 25 }]}>
-                <Text style={styles.title}>Menu de Inicio</Text>
+            <View style={[styles.verticalView, { marginBottom: 25, marginTop: 30 }]}>
+                <View style={styles.horizontalView}>
+                    <Text style={[styles.title , {marginLeft: 0, marginTop: 10}]}>Menu de Inicio</Text>
+                    <Image source={ImageProfile} style={[styles.profilePic, { marginRight: 10 }]}/>
+                </View>
+            </View>
+
+            <View style={[styles.verticalView, {backgroundColor: '#10B981', width:'100%', borderRadius:15, height:'8%'}]}>
+                <View style={styles.horizontalView}>
+                <Image 
+                    source={{ uri: 'https://yt3.googleusercontent.com/hTFKLU_Wm-6Ipgt7wVtQBBFuH1QcOs83akisJ1Q4YCKhgO0rt4vXUzAweh7SCcMl6NU4s1ly6A=s160-c-k-c0x00ffffff-no-rj' }} 
+                    style={[{borderRadius:20}]} 
+                />
+                    <Text style={[{color:'#fff', fontWeight:'bold', fontSize:20}]}>PRESIDENTA DE MEXICO</Text>
+                </View>
             </View>
 
             {/* Search Bar Section */}
-            <View style={[styles.verticalView, { marginBottom: 10 }]}>
+            <View style={[styles.verticalView, { marginBottom: -20 }]}>
                 <SearchBar
-                    placeholder="Escribe aquí..."
+                    placeholder="Buscar politico..."
                     onChangeText={(text) => updateSearch(text)}
                     value={search}
                     platform={Platform.OS === 'ios' ? 'ios' : 'android'}
@@ -88,7 +110,7 @@ const MainScreen = () => {
             </View>
 
             {/* Buttons Section */}
-            <View style={[styles.verticalView, { marginBottom: 10 }]}>
+            <View style={[styles.verticalView, { marginBottom: 50 }]}>
                 <View style={styles.horizontalViewButton}>
                     {["Candidato", "Casilla", "Proceso"].map((text, index) => (
                         <TouchableOpacity
@@ -124,7 +146,7 @@ const MainScreen = () => {
 
 
             {/* Bottom Menu Section */}
-            <View style={[styles.verticalView, { marginTop: 20 }]}>
+            <View style={[styles.verticalView, { marginTop: 5 }]}>
                 <MenuOpciones
                     icons={[Home, Search, Message, Profile]}
                     iconStyle={{ width: 30, height: 30 }}
@@ -253,13 +275,24 @@ const styles = StyleSheet.create({
         fontSize: 43,
     },
     imageCarousel: {
-        width: 300,
-        height: 350,
+        width: 340,
+        height: 360,
         borderRadius: 40, 
         resizeMode: 'cover', 
     },
     titleCarousel: {
-        fontSize: 21
+        fontSize: 22,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    subtitleCarousel: {
+        fontSize: 14,
+        color: '#fff',
+    },
+    slide: {
+        position: 'relative',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     paginationContainer: {
         flexDirection: 'row',
@@ -276,6 +309,17 @@ const styles = StyleSheet.create({
     },
     paginationDotActive: {
         backgroundColor: '#10B981',
+    },
+    insideText: {
+        position: 'absolute',
+        bottom: 0,
+        left: 5,
+        width: '97%',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+        paddingVertical: 10,
+        alignItems: 'flex-start',
+        paddingLeft: 10,
+        borderRadius: 40,
     },
 });
 
