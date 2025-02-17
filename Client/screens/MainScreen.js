@@ -1,91 +1,94 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Button, TouchableHighlight } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
-import { Outfit_400Regular, Outfit_700Bold } from '@expo-google-fonts/outfit';
 import ImageProfile from '../assets/PP.png';
 import { SearchBar } from 'react-native-elements';
 import Profile from '../assets/profile.png';
 import Home from '../assets/home.png';
 import Search from '../assets/search.png';
 import Message from '../assets/message.png';
-import MenuOpciones from '../components/menu'
-import Slider from '../components/Slider'
-import Tribunal from '../assets/tribunal.jpg'
-import Casilla from '../assets/casillas.png'
-import Candidato from '../assets/candidatos.jpg'
+import MenuOpciones from '../components/menu';
 import Icon from "react-native-vector-icons/AntDesign";
-// import { SliderBox } from "react-native-image-slider-box";
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 
 const MainScreen = () => {
-    // Estado para la búsqueda
+    const carouselRef = React.useRef(null);
     const [search, setSearch] = useState('');
+    const [activeIndex, setActiveIndex] = useState(0);
     const [pressedButtonIndex, setPressedButtonIndex] = useState(null);
+    const sliderWidth = 420; 
+    const itemWidth = 350;
+    const itemHeight = 400;  
 
-    const images = [
-        Candidato,
-        Casilla,
-        Tribunal
-    ];
+    useEffect(() => {
+        carouselRef?.current?.snapToItem(activeIndex, true);
+    }, [activeIndex]);
 
-    // Navegación
+    const [entries] = useState([
+        { title: 'Candidatos', illustration: { uri: 'https://media.istockphoto.com/id/1391693595/es/vector/hombre-y-mujer-político-debatiendo.jpg?s=1024x1024&w=is&k=20&c=QylXU_tli07ekkNuYYb4TGw4y8kkKXJ3Klpoj4_ptEM=' } },
+        { title: 'Casillas', illustration: { uri: 'https://oem.com.mx/elsoldetoluca/img/14738093/1685505486/BASE_LANDSCAPE/1200/voto.webp' } },
+        { title: 'Articulos', illustration: { uri: 'https://eljuegodelacorte.nexos.com.mx/wp-content/uploads/2023/04/constitucional.jpg' } },
+    ]);    
+
     const navigation = useNavigation();
-
-    // Cargar fuentes personalizadas
     const [fontsLoaded] = useFonts({
         Montserrat_700Bold,
     });
 
-    // Función para actualizar la búsqueda
     const updateSearch = (text) => {
         setSearch(text);
     };
 
-    // Si las fuentes no están cargadas, muestra un mensaje de carga
     if (!fontsLoaded) {
         return <Text>Loading...</Text>;
     }
 
-    // Función para manejar el botón presionado
     const handlePress = (index) => {
         setPressedButtonIndex(pressedButtonIndex === index ? null : index);
     };
 
+    const _renderItem = ({ item }) => (
+        <View style={styles.slide}>
+            <Image source={item.illustration} style={styles.imageCarousel} />
+            <Text style={styles.titleCarousel}>{item.title}</Text>
+        </View>
+    );    
+
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-
-            <View style={[styles.verticalView, {marginBottom: 40, marginTop: 20}]}>{/*Perfil y atras*/}
+            <View style={[styles.verticalView, { marginBottom: 40, marginTop: 1 }]}>
                 <View style={styles.horizontalView}>
-                    {/* Botón de retroceso */}
                     <TouchableOpacity
-                    style={[styles.backButton, {marginLeft: 20}]}
-                    onPress={() => navigation.goBack()}
+                        style={[styles.backButton, { marginLeft: 20 }]}
+                        onPress={() => navigation.goBack()}
                     >
                         <Icon name="leftcircle" style={styles.backButtonIcon} />
                     </TouchableOpacity>
-                    <Image source={ImageProfile} style={[styles.profilePic, {marginRight: 20}]} />
+                    <Image source={ImageProfile} style={[styles.profilePic, { marginRight: 20 }]} />
                 </View>
             </View>
 
-            <View style={[styles.verticalView, {marginBottom: 25}]}>{/*Titulo*/}
+            {/* Title Section */}
+            <View style={[styles.verticalView, { marginBottom: 25 }]}>
                 <Text style={styles.title}>Menu de Inicio</Text>
             </View>
 
-            <View style={[styles.verticalView, {marginBottom: -15}]}>
+            {/* Search Bar Section */}
+            <View style={[styles.verticalView, { marginBottom: 10 }]}>
                 <SearchBar
                     placeholder="Escribe aquí..."
                     onChangeText={(text) => updateSearch(text)}
                     value={search}
                     platform={Platform.OS === 'ios' ? 'ios' : 'android'}
-                    containerStyle={ styles.searchBarContainer }
+                    containerStyle={styles.searchBarContainer}
                     inputContainerStyle={styles.searchBarInputContainer}
                 />
-
             </View>
 
-            <View style={[styles.verticalView, {marginBottom: 35}]}>
+            {/* Buttons Section */}
+            <View style={[styles.verticalView, { marginBottom: 10 }]}>
                 <View style={styles.horizontalViewButton}>
                     {["Candidato", "Casilla", "Proceso"].map((text, index) => (
                         <TouchableOpacity
@@ -101,30 +104,51 @@ const MainScreen = () => {
                 </View>
             </View>
 
-            <View style={{ marginBottom: 20 }}> {/* Remove the verticalView style */}
-                {/* <SliderBox 
-                    images={images}
-                    sliderBoxHeight={200}
-                    dotColor={'#fff'}
-                    inactiveDotColor="#90A4AE"
-                    autoplay
-                    circleLoop
-                    resizeMode={'cover'}
-                    ImageComponentStyle={{ borderRadius: 15, width: "97%", marginTop: 5 }}
-                /> */}
+            {/* Gallery Section */}
+            <View>
+                <Carousel
+                    ref={carouselRef}
+                    data={entries}
+                    renderItem={_renderItem}
+                    sliderWidth={sliderWidth}
+                    itemWidth={itemWidth}
+                    onSnapToItem={(index) => setActiveIndex(index)}
+                    enableMomentum={true}
+                    enableSnap={true}
+                    decelerationRate="fast"
+                    autoplay={true}
+                    autoplayInterval={2000}
+                />
+                <CustomPagination activeIndex={activeIndex} entries={entries} />
             </View>
 
-            <View style={styles.verticalView}>
+
+            {/* Bottom Menu Section */}
+            <View style={[styles.verticalView, { marginTop: 20 }]}>
                 <MenuOpciones
-                    icons={[Home, Search, Message, Profile]} 
-                    iconStyle={{ width: 30, height: 30 }} 
+                    icons={[Home, Search, Message, Profile]}
+                    iconStyle={{ width: 30, height: 30 }}
                     containerStyle={{ marginTop: 10 }}
-                    screens={['ChatbotScreen','ChatbotScreen','ChatbotScreen','ChatbotScreen']} 
+                    screens={['ChatbotScreen', 'ChatbotScreen', 'ChatbotScreen', 'ChatbotScreen']}
                 />
             </View>
         </KeyboardAvoidingView>
-        
+    );
+};
 
+const CustomPagination = ({ activeIndex, entries }) => {
+    return (
+        <View style={styles.paginationContainer}>
+            {entries.map((_, index) => (
+                <View
+                    key={index}
+                    style={[
+                        styles.paginationDot,
+                        index === activeIndex && styles.paginationDotActive,
+                    ]}
+                />
+            ))}
+        </View>
     );
 };
 
@@ -149,27 +173,11 @@ const styles = StyleSheet.create({
         fontSize: 34,
         fontFamily: 'Montserrat_700Bold',
         fontWeight: 'bold',
-        paddingLeft: '5%'
-    },
-    button: {
-        height: '50%',
-        width: '30%',
-        marginTop: '5%',
-        backgroundColor: '#3d5146',
-        paddingBottom: 0,
-        paddingVertical: 7,
-        paddingHorizontal: 35,
-        borderRadius: 25,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        fontSize:12,
+        paddingLeft: '5%',
     },
     buttonSelect: {
         height: 45,
-        width: '30%',  
+        width: '30%',
         marginTop: '5%',
         backgroundColor: '#fff',
         justifyContent: 'center',
@@ -181,7 +189,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 3,
         paddingHorizontal: 10,
-        
     },
     buttonSelectPressed: {
         height: 45,
@@ -209,41 +216,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         textAlign: 'center',
     },
-    buttonText: {
-        color: '#e0e0e0',
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
     profilePic: {
         width: '17%',
         height: undefined,
         aspectRatio: 1,
     },
-    centered: {
-        alignItems: 'center', 
-        justifyContent: 'center', 
-    },
-    frontImage: {
-        width: '250',
-        height: '380',
-        borderRadius: 30,
-        overflow: 'hidden',
-        resizeMode: 'cover',
-    },
-    icon: {
-        width: '10%',
-        height: undefined,
-        aspectRatio: 1,
-        justifyContent: 'center',
-        
-    },
     searchBarContainer: {
-        width:'95%',
+        width: '95%',
         backgroundColor: '#f5f5f5',
         borderTopWidth: 0,
         borderBottomWidth: 0,
-        borderColor:'#000',
-        paddingLeft: '5%'
+        borderColor: '#000',
+        paddingLeft: '5%',
     },
     searchBarInputContainer: {
         backgroundColor: '#f5f5f5',
@@ -251,10 +235,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#000',
         borderBottomWidth: 2,
-        borderBottomColor: '#000'
-    },
-    searchBarInput: {
-        fontFamily: 'Montserrat_700Bold',
+        borderBottomColor: '#000',
     },
     backButton: {
         top: 15,
@@ -269,7 +250,32 @@ const styles = StyleSheet.create({
     },
     backButtonIcon: {
         color: "#10B981",
-        fontSize: 43, // Aumenté el tamaño para mejor visibilidad
+        fontSize: 43,
+    },
+    imageCarousel: {
+        width: 300,
+        height: 350,
+        borderRadius: 40, 
+        resizeMode: 'cover', 
+    },
+    titleCarousel: {
+        fontSize: 21
+    },
+    paginationContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingVertical: 10,
+    },
+    paginationDot: {
+        width: 10,
+        height: 10,
+        borderRadius: 5,
+        backgroundColor: '#ccc',
+        marginHorizontal: 5,
+    },
+    paginationDotActive: {
+        backgroundColor: '#10B981',
     },
 });
 
