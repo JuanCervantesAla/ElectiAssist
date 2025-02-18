@@ -87,16 +87,6 @@ const MainScreen = () => {
                 </View>
             </View>
 
-            <View style={[styles.verticalView, {backgroundColor: '#10B981', width:'100%', borderRadius:15, height:'8%'}]}>
-                <View style={styles.horizontalView}>
-                <Image 
-                    source={{ uri: 'https://yt3.googleusercontent.com/hTFKLU_Wm-6Ipgt7wVtQBBFuH1QcOs83akisJ1Q4YCKhgO0rt4vXUzAweh7SCcMl6NU4s1ly6A=s160-c-k-c0x00ffffff-no-rj' }} 
-                    style={[{borderRadius:20}]} 
-                />
-                    <Text style={[{color:'#fff', fontWeight:'bold', fontSize:20}]}>PRESIDENTA DE MEXICO</Text>
-                </View>
-            </View>
-
             {/* Search Bar Section */}
             <View style={[styles.verticalView, { marginBottom: -20 }]}>
                 <SearchBar
