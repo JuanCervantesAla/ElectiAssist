@@ -5,12 +5,13 @@ import RegistrationScreen from '../screens/RegistrationScreen';
 import HomeScreen from '../screens/HomeScreen';
 import MainScreen from '../screens/MainScreen';
 import ChatbotScreen from '../screens/ChatbotScreen';
+import TutorialScreen from '../screens/TutorialScreen.js';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="HomeScreen">
+    <Stack.Navigator initialRouteName="TutorialScreen">
       <Stack.Screen
         name="HomeScreen"
         component={HomeScreen}
@@ -34,6 +35,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="ChatbotScreen"
         component={ChatbotScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="TutorialScreen"
+        component={TutorialScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
