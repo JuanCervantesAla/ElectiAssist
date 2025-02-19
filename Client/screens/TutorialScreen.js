@@ -8,26 +8,26 @@ export default function Tutorial({ onClose }) {
 
     const pages = [
         {
-            backgroundColor: "#1E293B", // Azul oscuro
-            image: require("../assets/logoElectiAssist.png"),
+            backgroundColor: "#2d3830", // Azul oscuro
+            image: require("../assets/logov2.png"),
             dimensions: { width: 300, height: 300 },
-            color: "#10B981", 
+            color: "#d3c3b6", 
             title: "ElectiAssist",
             subtitle: "Bienvenido",
         },
         {
-            backgroundColor: "#0F172A", // Azul más oscuro
+            backgroundColor: "#2d3830", // Azul más oscuro
             //image: require("../assets/tutorial_1.png"),
             dimensions: { width: 250, height: 250 },
-            color: "#38BDF8", // Celeste
+            color: "#10B981", 
             title: "Funcionalidad 1",
             subtitle: "Aquí puedes gestionar tus tareas fácilmente.",
         },
         {
-            backgroundColor: "#1E293B",
+            backgroundColor: "#2d3830",
             //image: require("../assets/tutorial_2.png"),
             dimensions: { width: 250, height: 250 },
-            color: "#F87171", // Rojo claro
+            color: "#10B981", 
             title: "Funcionalidad 2",
             subtitle: "Personaliza tu experiencia en la configuración.",
         },
@@ -88,17 +88,17 @@ const styles = StyleSheet.create({
   },
   bottomBar: {
     position: "absolute",
-    bottom: 30,
+    bottom: 50,
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 30,
   },
   button: {
-    backgroundColor: "#10B981", 
+    backgroundColor: "#3d5146", 
     padding: 10,
     borderRadius: 5,
-    minWidth: 80,
+    minWidth: 70,
     alignItems: "center",
   },
   buttonText: {
