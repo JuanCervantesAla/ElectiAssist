@@ -15,11 +15,17 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import BackButton from "../components/ButtonBack";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleBackPress = () => {
+    // Este ejemplo navega hacia atrás en la pila de navegación
+    navigation.goBack();
+  };
 
   const handleLogin = async () => {
     console.log("Email:", email);
@@ -59,13 +65,7 @@ const LoginScreen = () => {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Botón de retroceso */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="leftcircle" style={styles.backButtonIcon} />
-        </TouchableOpacity>
+      <BackButton onPress={handleBackPress} />
         <View style={styles.formContainer}>
           <Text style={styles.title}>Iniciar Sesión</Text>
           <TextInput

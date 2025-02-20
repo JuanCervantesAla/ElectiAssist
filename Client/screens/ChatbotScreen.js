@@ -14,13 +14,29 @@ import {
 import { API_URL } from "@env";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Icon from "react-native-vector-icons/MaterialIcons";
+import BackButton from "../components/ButtonBack";
 
-const ChatbotScreen = () => {
+const ChatbotScreen = ({navigation}) => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef(null);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  const handleBackPress = () => {
+    // Este ejemplo navega hacia atrás en la pila de navegación
+    navigation.goBack();
+  };
+
+   // Mensaje de bienvenida por defecto
+   useEffect(() => {
+    const defaultMessage = {
+      id: Date.now(),
+      text: "Hola Soy ElectiBot, tu asistente virtual relacionado con las elecciones y la política en México. Estoy aquí para ayudarte a conocer a los candidatos, simular tu voto y responder cualquier pregunta que tengas sobre el proceso electoral. ¿En que puedo ayudarte hoy?",
+      sender: "bot",
+    };
+    setMessages([defaultMessage]); // Añadir mensaje de bienvenida al inicio
+  }, []);
 
   const sendMessage = async () => {
     if (!inputText.trim()) return;
@@ -56,9 +72,11 @@ const ChatbotScreen = () => {
   };
 
   useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: true });
-    }
+    setTimeout(() => {
+      if (flatListRef.current) {
+        flatListRef.current.scrollToEnd({ animated: true });
+      }
+    }, 100);
   }, [messages]);
 
   useEffect(() => {
@@ -75,9 +93,10 @@ const ChatbotScreen = () => {
       style={styles.container}
     >
       <SafeAreaView style={styles.safeArea}>
+      <BackButton onPress={handleBackPress} />
         {/* Encabezado */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Chatbot</Text>
+          <Text style={styles.headerText}>ElectiBot</Text>
         </View>
 
         {/* Lista de mensajes */}
@@ -134,7 +153,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f5f5f5",
   },
   header: {
-    backgroundColor: "#3d5146",
+    backgroundColor: "#fff",
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 20,
@@ -142,8 +161,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   headerText: {
-    color: "#fff",
-    fontSize: 20,
+    color: "#111111",
+    fontSize: 30,
     fontWeight: "bold",
   },
   messagesContainer: {
