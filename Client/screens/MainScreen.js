@@ -1,5 +1,5 @@
-import React, { useState , useEffect} from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Button, TouchableHighlight } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, ScrollView, Button, TouchableHighlight, Dimensions, Animated, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
 import ImageProfile from '../assets/PP.png';
@@ -10,38 +10,53 @@ import Search from '../assets/search.png';
 import Message from '../assets/message.png';
 import MenuOpciones from '../components/menu';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faCheckToSlot, faLandmarkDome, faNewspaper } from '@fortawesome/free-solid-svg-icons';
-import Icon from "react-native-vector-icons/AntDesign";
-import Carousel, { Pagination } from 'react-native-snap-carousel';
-
+import { faCheckToSlot, faLandmarkDome, faNewspaper, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import Carousel from 'react-native-snap-carousel';
+import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
+import Card from '../components/card';
 
 const MainScreen = () => {
-    const carouselRef = React.useRef(null);
-    const [search, setSearch] = useState('');
+    const screenWidth = Dimensions.get('window').width;
+    const carouselRef = useRef(null);
     const [activeIndex, setActiveIndex] = useState(0);
     const [pressedButtonIndex, setPressedButtonIndex] = useState(null);
-    const sliderWidth = 380; 
-    const itemWidth = 350;
-    const itemHeight = 400;  
+    const [selected, setSelected] = useState(null);
+    const [article, setArticle] = useState(null);
 
     useEffect(() => {
-        carouselRef?.current?.snapToItem(activeIndex, true);
+        const fetchArticle = async () => {
+            try { 
+                const response = await fetch(`${API_URL}/api/article`);
+                const result = await response.json();
+                setArticle(result);
+
+                console.log(result);
+                console.log("Hello");
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchArticle();
+
+    },[]);
+    
+    useEffect(() => {
+        if (carouselRef.current) {
+            carouselRef.current.snapToItem(activeIndex, true);
+        }
     }, [activeIndex]);
 
     const [entries] = useState([
-        { title: 'Candidatos', subTitle: 'Presidentes y Gobernadores', icon: faLandmarkDome , illustration: { uri: 'https://media.istockphoto.com/id/1391693595/es/vector/hombre-y-mujer-político-debatiendo.jpg?s=1024x1024&w=is&k=20&c=QylXU_tli07ekkNuYYb4TGw4y8kkKXJ3Klpoj4_ptEM=' } },
-        { title: 'Casillas', subTitle: 'Ubica tu casilla de voto', icon : faCheckToSlot , illustration: { uri: 'https://oem.com.mx/elsoldetoluca/img/14738093/1685505486/BASE_LANDSCAPE/1200/voto.webp' } },
-        { title: 'Articulos', subTitle: 'Conoce mas de la politica mexicana',icon : faNewspaper , illustration: { uri: 'https://eljuegodelacorte.nexos.com.mx/wp-content/uploads/2023/04/constitucional.jpg' } },
+        { title: 'Candidatos', subTitle: 'Presidentes y Gobernadores', icon: faLandmarkDome, illustration: { uri: 'https://media.istockphoto.com/id/1280004154/es/vector/el-día-de-las-elecciones-mujer-presidenta-en-el-diseño-de-vector-de-podio.jpg?s=1024x1024&w=is&k=20&c=oW9RiX6qD44UBaW2y1wMb9rVgZI2HlACblQ1C-syeD4=' } },
+        { title: 'Casillas', subTitle: 'Ubica tu casilla de voto', icon: faCheckToSlot, illustration: { uri: 'https://oem.com.mx/elsoldetoluca/img/14738093/1685505486/BASE_LANDSCAPE/1200/voto.webp' } },
+        { title: 'Artículos', subTitle: 'Conoce más de la política mexicana', icon: faNewspaper, illustration: { uri: 'https://eljuegodelacorte.nexos.com.mx/wp-content/uploads/2023/04/constitucional.jpg' } },
     ]);    
 
     const navigation = useNavigation();
-    const [fontsLoaded] = useFonts({
-        Montserrat_700Bold,
-    });
-
-    const updateSearch = (text) => {
-        setSearch(text);
-    };
+    const [fontsLoaded] = useFonts({ Montserrat_400Regular, Montserrat_700Bold });
 
     if (!fontsLoaded) {
         return <Text>Loading...</Text>;
@@ -52,55 +67,45 @@ const MainScreen = () => {
     };
 
     const _renderItem = ({ item }) => (
-        <View style={styles.slide}>
-            <Image source={item.illustration} style={styles.imageCarousel} />
-            <View style={styles.insideText}>
-                <Text style={styles.titleCarousel}>{item.title}</Text>
-                <View style={[styles.horizontalView , {paddingLeft: 10, marginTop:15}]}>
-                    {item.icon && <FontAwesomeIcon icon={item.icon} size={30} color="white" />}
-                    <Text style={[styles.subtitleCarousel, {marginBottom: -5, paddingLeft: 15}]}>{item.subTitle}</Text>
+            <View style={styles.slide}>
+                <Image source={item.illustration} style={styles.imageCarousel} />
+                <View style={styles.insideText}>
+                    <Text style={styles.titleCarousel}>{item.title}</Text>
+                    <View style={[styles.horizontalView , {paddingLeft: 10, marginTop:15}]}>
+                        {item.icon && <FontAwesomeIcon icon={item.icon} size={30} color="white" />}
+                        <Text style={[styles.subtitleCarousel, {marginBottom: -5, paddingLeft: 15}]}>{item.subTitle}</Text>
+                    </View>
                 </View>
             </View>
-        </View>
-    );    
+    );  
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
-        
-            {/* <View style={[styles.verticalView, { marginBottom: 40, marginTop: 1 }]}>
-                <View style={styles.horizontalView}>
-                    <TouchableOpacity
-                        style={[styles.backButton, { marginLeft: 20 }]}
-                        onPress={() => navigation.goBack()}
-                    >
-                        <Icon name="leftcircle" style={styles.backButtonIcon} />
-                    </TouchableOpacity>
-                    <Image source={ImageProfile} style={[styles.profilePic, { marginRight: 20 }]} />
-                </View>
-            </View> */}
-
-            {/* Title Section */}
-            <View style={[styles.verticalView, { marginBottom: 25, marginTop: 30 }]}>
-                <View style={styles.horizontalView}>
-                    <Text style={[styles.title , {marginLeft: 0, marginTop: 10}]}>Menu de Inicio</Text>
-                    <Image source={ImageProfile} style={[styles.profilePic, { marginRight: 10 }]}/>
+            <View style={[styles.verticalView, { marginBottom: 25, marginTop: 10, marginLeft: 10 }]}>
+                <View style={[styles.horizontalView, { gap: 20 }]}>
+                    <Text style={[styles.title, { marginRight: 150 }]}>EA</Text>
+                    <FontAwesomeIcon icon={faMagnifyingGlass} size={30} color="black" />
+                    <Image source={ImageProfile} style={[styles.profilePic, { marginRight: 10 }]} />
                 </View>
             </View>
 
-            {/* Search Bar Section */}
-            <View style={[styles.verticalView, { marginBottom: -20 }]}>
-                <SearchBar
-                    placeholder="Buscar politico..."
-                    onChangeText={(text) => updateSearch(text)}
-                    value={search}
-                    platform={Platform.OS === 'ios' ? 'ios' : 'android'}
-                    containerStyle={styles.searchBarContainer}
-                    inputContainerStyle={styles.searchBarInputContainer}
+            <View style={[{ marginLeft: -10 , marginBottom: 30}]}>
+                <Carousel
+                    ref={carouselRef}
+                    data={entries}
+                    renderItem={_renderItem}
+                    sliderWidth={screenWidth - 40}
+                    itemWidth={screenWidth}
+                    onSnapToItem={(index) => setActiveIndex(index)}
+                    enableMomentum={true}
+                    enableSnap={true}
+                    decelerationRate="fast"
+                    autoplay={true}
+                    autoplayInterval={2000}
                 />
             </View>
 
-            {/* Buttons Section */}
-            <View style={[styles.verticalView, { marginBottom: 50 }]}>
+            <View style={[styles.verticalView, { marginBottom: 15 }]}>
                 <View style={styles.horizontalViewButton}>
                     {["Candidato", "Casilla", "Proceso"].map((text, index) => (
                         <TouchableOpacity
@@ -115,52 +120,48 @@ const MainScreen = () => {
                     ))}
                 </View>
             </View>
-
-            {/* Gallery Section */}
-            <View>
-                <Carousel
-                    ref={carouselRef}
-                    data={entries}
-                    renderItem={_renderItem}
-                    sliderWidth={sliderWidth}
-                    itemWidth={itemWidth}
-                    onSnapToItem={(index) => setActiveIndex(index)}
-                    enableMomentum={true}
-                    enableSnap={true}
-                    decelerationRate="fast"
-                    autoplay={true}
-                    autoplayInterval={2000}
-                />
-                <CustomPagination activeIndex={activeIndex} entries={entries} />
+            
+            <View style={[styles.horizontalView, { justifyContent: 'center', gap: 70 }]}>
+                {["Top Articulos", "Top Candidatos"].map((text, index) => (
+                    <Pressable 
+                        key={index}
+                        onPress={() => {setSelected(index);}} 
+                        style={[
+                            styles.pressable, 
+                            selected === index && styles.pressableSelected
+                        ]}
+                    >
+                        <Text style={selected === index ? styles.textSelected : styles.text}>
+                            {text}
+                        </Text>
+                    </Pressable>
+                ))}
             </View>
 
+            <View style={[{borderBottomWidth:2, borderBlockColor: '#ccc', paddingTop:25, width:'90%', marginLeft:20}]}></View>
 
-            {/* Bottom Menu Section */}
-            <View style={[styles.verticalView, { marginTop: 5 }]}>
-                <MenuOpciones
-                    icons={[Home, Search, Message, Profile]}
-                    iconStyle={{ width: 30, height: 30 }}
-                    containerStyle={{ marginTop: 10 }}
-                    screens={['ChatbotScreen', 'ChatbotScreen', 'ChatbotScreen', 'ChatbotScreen']}
-                />
+            <View style={[styles.verticalView, {marginBottom:50}]}>
+                <ScrollView style={styles.scrollContainer}>
+                    {article.length > 0 ? (
+                        article.map((article, index) => (
+                            <Card key={index} title={article.title} description={article.description} />
+                        ))
+                    ) : (
+                        <p>Loading articles...</p>
+                    )}
+                </ScrollView>
+            </View>
+
+            <View style={[styles.verticalView, { marginTop: 5, flex:1 }]}>
+                <View style={styles.menuContainer}>
+                    <MenuOpciones
+                        icons={[Home, Search, Message, Profile]}
+                        iconStyle={{ width: 30, height: 30 }}
+                        containerStyle={{ marginTop: 10 }}
+                    />
+                </View>
             </View>
         </KeyboardAvoidingView>
-    );
-};
-
-const CustomPagination = ({ activeIndex, entries }) => {
-    return (
-        <View style={styles.paginationContainer}>
-            {entries.map((_, index) => (
-                <View
-                    key={index}
-                    style={[
-                        styles.paginationDot,
-                        index === activeIndex && styles.paginationDotActive,
-                    ]}
-                />
-            ))}
-        </View>
     );
 };
 
@@ -186,27 +187,55 @@ const styles = StyleSheet.create({
         fontFamily: 'Montserrat_700Bold',
         fontWeight: 'bold',
         paddingLeft: '5%',
+        color:'#10B981',
+    },
+    profilePic: {
+        width: '17%',
+        height: undefined,
+        aspectRatio: 1,
+        marginRight:60,
+    },
+    slide: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    imageCarousel: {
+        width: '80%',  
+        height: 200,  
+        resizeMode: 'cover',
+        borderRadius: 30,  
+    },
+    insideText: {
+        position: 'absolute',
+        bottom: 0,
+        left: 40,
+        width:'60%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        padding: 8,
+        borderRadius: 20,
+    },
+    titleCarousel: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+    subtitleCarousel: {
+        color: 'white',
+        fontSize: 14,
+    },
+    horizontalView: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    horizontalViewButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
     },
     buttonSelect: {
         height: 45,
-        width: '30%',
-        marginTop: '5%',
+        width: '30%', 
         backgroundColor: '#fff',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 3,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        paddingHorizontal: 10,
-    },
-    buttonSelectPressed: {
-        height: 45,
-        width: '30%',
-        marginTop: '5%',
-        backgroundColor: '#10B981',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 8,
@@ -216,100 +245,87 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 3,
         paddingHorizontal: 10,
+        borderWidth: 2, 
+        borderColor: '#10B981',
     },
-    buttonSelectText: {
-        color: '#000',
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    buttonSelectTextPressed: {
-        color: '#fff',
-        fontSize: 16,
-        fontWeight: 'bold',
-        textAlign: 'center',
-    },
-    profilePic: {
-        width: '17%',
-        height: undefined,
-        aspectRatio: 1,
-    },
-    searchBarContainer: {
-        width: '95%',
-        backgroundColor: '#f5f5f5',
-        borderTopWidth: 0,
-        borderBottomWidth: 0,
-        borderColor: '#000',
-        paddingLeft: '5%',
-    },
-    searchBarInputContainer: {
-        backgroundColor: '#f5f5f5',
-        borderRadius: 12,
-        borderWidth: 2,
-        borderColor: '#000',
-        borderBottomWidth: 2,
-        borderBottomColor: '#000',
-    },
-    backButton: {
-        top: 15,
-        width: '12%',
-        height: undefined,
-        aspectRatio: 1,
-        borderRadius: 20,
-        backgroundColor: "#f5f5f5",
-        justifyContent: "center",
-        alignItems: "center",
-        zIndex: 1,
-    },
-    backButtonIcon: {
-        color: "#10B981",
-        fontSize: 43,
-    },
-    imageCarousel: {
-        width: 340,
-        height: 360,
-        borderRadius: 40, 
-        resizeMode: 'cover', 
-    },
-    titleCarousel: {
-        fontSize: 22,
-        color: '#fff',
-        fontWeight: 'bold',
-    },
-    subtitleCarousel: {
-        fontSize: 14,
-        color: '#fff',
-    },
-    slide: {
-        position: 'relative',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    paginationContainer: {
-        flexDirection: 'row',
+    buttonSelectPressed: {
+        height: 45,
+        width: '30%',
+        backgroundColor: '#10B981', 
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 10,
+        borderRadius: 8,
+        elevation: 3,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        paddingHorizontal: 10,
+        borderWidth: 2, 
+        borderColor: '#10B981',
     },
-    paginationDot: {
-        width: 10,
-        height: 10,
-        borderRadius: 5,
-        backgroundColor: '#ccc',
-        marginHorizontal: 5,
+    buttonSelectText: {
+        fontSize: 16,
+        fontFamily: 'Montserrat_700Bold',
+        color: '#10B981',
     },
-    paginationDotActive: {
-        backgroundColor: '#10B981',
+    buttonSelectTextPressed: {
+        fontSize: 16,
+        fontFamily: 'Montserrat_700Bold',
+        color: '#fff',
     },
-    insideText: {
+    searchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#10B981',
+        borderRadius: 25,
+        paddingHorizontal: 10,
+        backgroundColor: 'white',
+        overflow: 'hidden',
+    },
+    searchInput: {
+        flex: 1,
+        fontSize: 16,
+        paddingHorizontal: 10,
+    },
+    horizontalViewButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    pressable: {
+        borderBottomWidth: 2,
+        borderColor: '#000',
+        paddingBottom: 5,
+    },
+    pressableSelected: {
+        borderColor: '#10B981',
+    },
+    text: {
+        fontSize: 18,
+        color: '#000',
+    },
+    textSelected: {
+        fontSize: 18,
+        color: '#10B981',
+        fontWeight: 'bold',
+    },
+    menuContainer: {
         position: 'absolute',
-        bottom: 0,
-        left: 5,
-        width: '97%',
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-        paddingVertical: 10,
-        alignItems: 'flex-start',
-        paddingLeft: 10,
-        borderRadius: 40,
+        bottom: 10,
+        left: 0,
+        right: 0,
+        backgroundColor: '#fafafa',
+        paddingVertical: 5,
+        borderTopWidth: 1,  
+        borderTopColor: '#ccc',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor:'#000',
+        borderRadius:40,  
+    },
+    scrollContainer: {
+        maxHeight: 280, // Establece una altura máxima con scroll
     },
 });
 
