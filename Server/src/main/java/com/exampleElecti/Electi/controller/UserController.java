@@ -6,6 +6,7 @@ import com.exampleElecti.Electi.model.LoginRequest;
 import com.exampleElecti.Electi.model.User;
 import com.exampleElecti.Electi.repository.UserRepository;
 import com.exampleElecti.Electi.service.JwtService;
+import com.exampleElecti.Electi.tool.PasswordUtilEncrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,11 +27,13 @@ public class UserController {
 
     private final UserRepository userRepository;//Repository of all the users
     private JwtService jwtService;
+    private PasswordUtilEncrypt encrypter;
 
     @Autowired
-    public UserController(UserRepository userRepository, JwtService jwtService) {//Constructor for the repository
+    public UserController(UserRepository userRepository, JwtService jwtService, PasswordUtilEncrypt encrypter) {//Constructor for the repository
         this.userRepository = userRepository;
         this.jwtService = jwtService;
+        this.encrypter = encrypter;
     }
 
     @GetMapping
@@ -50,13 +53,13 @@ public class UserController {
             Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail().trim());//Filters the users by Email
             if(userOptional.isPresent()) {//If user is in the DB
                 User user = userOptional.get();
-                if(user.getPassword().equals(loginRequest.getPassword())) {// And the password matches
+                if(encrypter.verifyPassword(loginRequest.getPassword(), user.getPassword())) {// And the password matches
                     String token = jwtService.generateToken(loginRequest.getEmail());//Generates token
                     return ResponseEntity.ok(new ApiResponse("Inicio de sesion exitoso", user, token));
                 } else {//If password doesnt match
                     return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse("Contrasena incorrecta, intenta de nuevo"));
                 }
-            } else {//If theres not user
+            } else {//If there's not user
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ApiResponse("No se encontro el correo, ingresa de nuevo el correo correcto"));
             }
         } catch (Exception e) { //Catches the exception trying to not stop the execution of the program
@@ -79,7 +82,7 @@ public class UserController {
         User userToInsert = new User();//Creates a new user and fill it with the receiving data
         userToInsert.setName(user.getName());
         userToInsert.setEmail(user.getEmail());
-        userToInsert.setPassword(user.getPassword());
+        userToInsert.setPassword(encrypter.hashPassword(user.getPassword()));
         userToInsert.setSection((user.getSection()));
         userToInsert.setAge(userToInsert.getAge());
         userToInsert.setCurp(userToInsert.getCurp());
