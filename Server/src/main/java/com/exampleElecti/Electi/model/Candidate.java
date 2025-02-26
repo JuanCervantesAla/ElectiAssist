@@ -1,6 +1,7 @@
 package com.exampleElecti.Electi.model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -32,23 +33,27 @@ public class Candidate {
     @Column(name = "position")
     private String position;
 
+    @Column(name = "party")
+    private String party;
+
     /********* RELATIONS*********/
     @OneToMany(mappedBy = "candidate")
     public List<Proposal> proposalList;
 
-    @ManyToOne
-    @JoinColumn(name = "fk_political_party_id", nullable = false)
-    private Political_Party political_party;
+//    @ManyToOne
+//    @JoinColumn(name = "fk_political_party_id", nullable = false)
+//    private Political_Party political_party;
 
 
     /********* CONSTRUCTOR*********/
     public Candidate(){}
-    public Candidate(Long id_, String name_, Integer age_, String level_, String position_){
+    public Candidate(Long id_, String name_, Integer age_, String level_, String position_, String party_){
         this.id  = id_;
         this.name = name_;
         this.age = age_;
         this.level = level_;
         this.position = position_;
+        this.party = party_;
     }
 
     /********* GETTERS&SETTERS*********/
@@ -90,6 +95,14 @@ public class Candidate {
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public void setParty(String party_){
+        this.party = party_;
+    }
+
+    public String getParty(){
+        return party;
     }
 
 }

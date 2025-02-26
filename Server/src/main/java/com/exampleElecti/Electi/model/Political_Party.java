@@ -25,9 +25,9 @@ public class Political_Party {
     @Column(name ="image_url")
     private String image_url;
 
-    /********* RELATIONS*********/
-    @OneToMany(mappedBy = "political_party")
-    public List<Candidate> candidateList;
+//    /********* RELATIONS*********/
+//    @OneToMany(mappedBy = "political_party")
+//    public List<Candidate> candidateList;
 
     /********* CONSTRUCTOR*********/
     public Political_Party(){}

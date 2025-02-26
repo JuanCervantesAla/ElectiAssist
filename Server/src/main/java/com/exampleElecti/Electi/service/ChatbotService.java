@@ -1,7 +1,6 @@
 package com.exampleElecti.Electi.service;
 
-import com.exampleElecti.Electi.security.ChatbotConfig;
-import io.github.cdimascio.dotenv.Dotenv;
+import com.exampleElecti.Electi.config.ChatbotConfig;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
