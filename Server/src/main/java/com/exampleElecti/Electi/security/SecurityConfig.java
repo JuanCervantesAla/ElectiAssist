@@ -28,7 +28,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/user/register","/api/user/login", "/api/user", "/api/chatbot/send", "/api/python/phe", "/api/article", "/api/python/candidates", "/api/candidate/updateAll").permitAll()//Allow public to login
+                        .requestMatchers(
+                                "/api/user/register",
+                                "/api/user/login",
+                                "/api/user",
+                                "/api/candidate/updateAll",
+                                "/api/images/upload/{id}"
+                        ).permitAll()//Allow public to login
                         .anyRequest().authenticated()//Secure the rest of the endpoints
                 )
                 .sessionManagement(session -> session

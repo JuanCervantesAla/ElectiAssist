@@ -43,6 +43,9 @@ public class User {
     @Column(name = "curp")
     private String curp;
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     /********* RELATIONS*********/
     @OneToMany(mappedBy = "user")
     private List<Chatbot_Interaction> chatbotInteractionList;
@@ -56,7 +59,7 @@ public class User {
 
     /********* CONSTRUCTOR*********/
     public User(){}
-    public User(Long id_, String name_, String email_, String password_, String section_, String polling_station_, Integer age_, String curp_){
+    public User(Long id_, String name_, String email_, String password_, String section_, String polling_station_, Integer age_, String curp_, String imageUrl_){
         this.id = id_;
         this.name = name_;
         this.email = email_;
@@ -64,6 +67,7 @@ public class User {
         this.section = section_;
         this.polling_station = polling_station_;
         this.curp = curp_;
+        this.imageUrl = imageUrl_;
     }
 
     /********* GETTERS&SETTERS*********/
@@ -129,6 +133,14 @@ public class User {
 
     public void setCurp(String curp_){
         this.curp = curp_;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public List<Chatbot_Interaction> getChatbotInteractionList() {
