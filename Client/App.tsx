@@ -1,14 +1,30 @@
-// App.tsx
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import { View, Text, Image } from "react-native";
 import { NavigationContainer } from '@react-navigation/native';
+import { useFonts, AbhayaLibre_800ExtraBold } from "@expo-google-fonts/abhaya-libre";
 import AppNavigator from './navigation/AppNavigator';
+import { FontsLoader } from "./components/FontLoader"; 
+ 
+SplashScreen.preventAutoHideAsync();
 
-const App = () => {
+export default function App() {
+  let [fontsLoaded] = useFonts({
+    AbhayaLibreExtraBold: AbhayaLibre_800ExtraBold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
+  SplashScreen.hideAsync();
+
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <FontsLoader>
+      <NavigationContainer>
+        <AppNavigator />
+      </NavigationContainer>
+    </FontsLoader>
   );
-};
-
-export default App;
+}

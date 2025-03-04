@@ -2,33 +2,32 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import HomeScreen from "./HomeScreen";
 
-export default function Tutorial() {
+export default function Tutorial({ onClose }) {
     const [currentPage, setCurrentPage] = useState(0);
-    const navigation = useNavigation(); // Hook para navegar
 
     const pages = [
         {
-            backgroundColor: "#2d3830",
+            backgroundColor: "#2d3830", // Azul oscuro
             image: require("../assets/logov2.png"),
             dimensions: { width: 300, height: 300 },
-            color: "#d3c3b6",
+            color: "#d3c3b6", 
             title: "ElectiAssist",
             subtitle: "Bienvenido",
         },
         {
-            backgroundColor: "#2d3830",
+            backgroundColor: "#2d3830", // Azul más oscuro
+            //image: require("../assets/tutorial_1.png"),
             dimensions: { width: 250, height: 250 },
-            color: "#10B981",
+            color: "#10B981", 
             title: "Funcionalidad 1",
             subtitle: "Aquí puedes gestionar tus tareas fácilmente.",
         },
         {
             backgroundColor: "#2d3830",
+            //image: require("../assets/tutorial_2.png"),
             dimensions: { width: 250, height: 250 },
-            color: "#10B981",
+            color: "#10B981", 
             title: "Funcionalidad 2",
             subtitle: "Personaliza tu experiencia en la configuración.",
         },
@@ -42,17 +41,13 @@ export default function Tutorial() {
         if (currentPage > 0) setCurrentPage(currentPage - 1);
     };
 
-    const handleFinish = () => {
-        navigation.replace("HomeScreen");
-    };
-
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: pages[currentPage].backgroundColor }]}>
             <StatusBar barStyle="light-content" backgroundColor={pages[currentPage].backgroundColor} />
             <Image source={pages[currentPage].image} style={[styles.image, pages[currentPage].dimensions]} />
             <Text style={[styles.title, { color: pages[currentPage].color }]}>{pages[currentPage].title}</Text>
             <Text style={styles.subtitle}>{pages[currentPage].subtitle}</Text>
-
+            
             {/* Barra de navegación */}
             <View style={styles.bottomBar}>
                 {currentPage > 0 && (
@@ -61,7 +56,7 @@ export default function Tutorial() {
                     </TouchableOpacity>
                 )}
                 <Text style={styles.pageIndicator}>{currentPage + 1}/{pages.length}</Text>
-                <TouchableOpacity style={styles.button} onPress={currentPage === pages.length - 1 ? handleFinish : goToNextPage}>
+                <TouchableOpacity style={styles.button} onPress={currentPage === pages.length - 1 ? onClose : goToNextPage}>
                     <Text style={styles.buttonText}>{currentPage === pages.length - 1 ? "Finalizar" : "Siguiente"}</Text>
                 </TouchableOpacity>
             </View>
@@ -100,7 +95,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   button: {
-    backgroundColor: "#3d5146",
+    backgroundColor: "#3d5146", 
     padding: 10,
     borderRadius: 5,
     minWidth: 70,

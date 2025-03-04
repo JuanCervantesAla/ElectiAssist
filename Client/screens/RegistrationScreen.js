@@ -1,44 +1,64 @@
-// src/screens/RegistrationScreen.js
 import React, { useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   Alert,
+  Image,
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
+import InputField from "../components/InputField";
+import PasswordField from "../components/PasswordField";
+import HeaderWithTitle from "../components/HeaderWithTitle";
+import GradientButton from "../components/GradientButton";
 import { API_URL } from "@env";
 
 const RegistrationScreen = () => {
   const navigation = useNavigation();
+
+  // Estados
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [section, setSection] = useState("");
   const [age, setAge] = useState("");
   const [curp, setCurp] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // 👁 Estado de visibilidad
+  const [showPasswordErrors, setShowPasswordErrors] = useState(false); // ⬅️ Se muestran errores solo tras enviar
+  const [passwordErrors, setPasswordErrors] = useState({
+    minLength: false,
+    upperCase: false,
+    lowerCase: false,
+    specialChar: false,
+  });
 
   const handleRegistration = async () => {
-    console.log("Name:", name);
-    console.log("Email:", email);
-    console.log("Password:", password);
-    console.log("Section:", section);
-    console.log("Age:", age);
-    console.log("CURP:", curp);
+    console.log("name", name);
+    console.log("email", email);
+    console.log("password", password);
+    console.log("section", section);
+    console.log("age", age);
+    console.log("curp", curp);
 
-    // Validación de campos
+    // Activamos la visibilidad de los errores de contraseña
+    setShowPasswordErrors(true);
+
+    // Si la contraseña es inválida, no enviamos la petición
+    if (!isPasswordValid()) {
+      Alert.alert("Error", "La contraseña no cumple con los requisitos.");
+      return;
+    }
+
     if (!name || !email || !password || !section || !age || !curp) {
       Alert.alert("Error", "Completa todos los campos");
       return;
     }
-
+    console.log(`${API_URL}/api/user/register`);
     try {
       const response = await fetch(`${API_URL}/api/user/register`, {
         method: "POST",
@@ -56,8 +76,7 @@ const RegistrationScreen = () => {
       });
 
       const text = await response.text();
-      console.log("Raw response:", text); // Para ver si la respuesta tiene contenido
-      const data = text ? JSON.parse(text) : {}; // Evita el error de JSON vacío
+      const data = text ? JSON.parse(text) : {};
 
       if (response.ok) {
         alert("Registro exitoso");
@@ -70,6 +89,24 @@ const RegistrationScreen = () => {
       alert("Error en la conexión");
     }
   };
+  // Función para validar la contraseña
+  const validatePassword = (text) => {
+    setPassword(text);
+
+    const errors = {
+      minLength: text.length >= 8,
+      upperCase: /[A-Z]/.test(text),
+      lowerCase: /[a-z]/.test(text),
+      specialChar: /[!@#$%^&*]/.test(text),
+    };
+
+    setPasswordErrors(errors);
+  };
+
+  // Función para verificar si la contraseña es válida
+  const isPasswordValid = () => {
+    return Object.values(passwordErrors).every((value) => value === true);
+  };
 
   return (
     <KeyboardAvoidingView
@@ -77,28 +114,29 @@ const RegistrationScreen = () => {
       style={styles.container}
     >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* Botón de retroceso */}
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="leftcircle" style={styles.backButtonIcon} />
-        </TouchableOpacity>
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Regístrate</Text>
+        <HeaderWithTitle
+          title="Registrarse"
+          linkText="¿Ya tienes cuenta? Inicia Sesión"
+          onLinkPress={() => navigation.navigate("LoginScreen")}
+        />
 
-          {/* Campo: Nombre */}
-          <TextInput
-            style={styles.input}
+        <View style={styles.formContainer}>
+          <InputField
+            label="Nombre"
             value={name}
             onChangeText={setName}
-            placeholder="Nombre completo"
+            placeholder="Nombre"
             autoCapitalize="words"
           />
-
-          {/* Campo: Email */}
-          <TextInput
-            style={styles.input}
+          <InputField
+            label="Curp"
+            value={curp}
+            onChangeText={setCurp}
+            placeholder="CURP"
+            autoCapitalize="characters"
+          />
+          <InputField
+            label="Email"
             value={email}
             onChangeText={setEmail}
             placeholder="Email"
@@ -106,127 +144,124 @@ const RegistrationScreen = () => {
             autoCapitalize="none"
           />
 
-          {/* Campo: Contraseña */}
-          <TextInput
-            style={styles.input}
+          <PasswordField
             value={password}
-            onChangeText={setPassword}
-            placeholder="Contraseña"
-            secureTextEntry
-            autoCapitalize="none"
+            onChangeText={validatePassword}
+            showPasswordErrors={showPasswordErrors}
+            passwordErrors={passwordErrors}
           />
 
-          {/* Campo: Sección */}
-          <TextInput
-            style={styles.input}
-            value={section}
-            onChangeText={setSection}
-            placeholder="Sección"
-            autoCapitalize="none"
+          {showPasswordErrors && (
+            <View style={styles.validationContainer}>
+              <ValidationItem
+                text="Debe tener al menos 8 caracteres"
+                isValid={passwordErrors.minLength}
+              />
+              <ValidationItem
+                text="Debe contener una letra mayúscula"
+                isValid={passwordErrors.upperCase}
+              />
+              <ValidationItem
+                text="Debe contener una letra minúscula"
+                isValid={passwordErrors.lowerCase}
+              />
+              <ValidationItem
+                text="Debe incluir un carácter especial (!@#$%^&*)"
+                isValid={passwordErrors.specialChar}
+              />
+            </View>
+          )}
+
+<GradientButton
+            onPress={handleRegistration}
+            text="Crear Cuenta"
           />
-
-          {/* Campo: Edad */}
-          <TextInput
-            style={styles.input}
-            value={age}
-            onChangeText={setAge}
-            placeholder="Edad"
-            keyboardType="numeric"
-          />
-
-          {/* Campo: CURP */}
-          <TextInput
-            style={styles.input}
-            value={curp}
-            onChangeText={setCurp}
-            placeholder="CURP"
-            autoCapitalize="characters"
-          />
-
-          {/* Botón de Registro */}
-          <TouchableOpacity onPress={handleRegistration} style={styles.button}>
-            <LinearGradient
-              colors={["#3d5146", "#2d3830"]}
-              style={styles.gradient}
-            >
-              <Text style={styles.buttonText}>Crear Cuenta</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-
-          {/* Enlace a Login */}
-          <TouchableOpacity onPress={() => navigation.navigate("LoginScreen")}>
-            <Text style={styles.linkText}>
-              ¿Ya tienes cuenta? Inicia Sesión
-            </Text>
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
+// 🔹 Componente para mostrar errores con el icono solo si no se cumple la regla
+const ValidationItem = ({ text, isValid }) => {
+  return (
+    <View style={styles.validationItem}>
+      <Image
+        source={
+          isValid
+            ? require("../assets/correctMark.png")
+            : require("../assets/errorMark.png")
+        }
+        style={styles.validationIcon}
+      />
+      <Text style={[styles.validationText, !isValid && styles.errorText]}>
+        {text}
+      </Text>
+    </View>
+  );
+};
+
+// Estilos
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#e0e0e0", // Hueso
+    backgroundColor: "#E0E0E0",
   },
   scrollContainer: {
     flexGrow: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    paddingTop: 50,
   },
   formContainer: {
     padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-    color: "#2d3830", // Verde oscuro
-  },
-  input: {
-    height: 50,
-    borderColor: "#3d5146", // Verde claro
-    borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    backgroundColor: "#fff", // Fondo blanco para el input
-    color: "#2d3830", // Verde oscuro para el texto
+    paddingHorizontal: 35,
   },
   button: {
     marginTop: 10,
   },
   gradient: {
     padding: 15,
-    borderRadius: 5,
+    marginTop: 10,
+    borderRadius: 15,
     alignItems: "center",
-    backgroundColor: "#3d5146", // Verde claro
   },
   buttonText: {
-    color: "#e0e0e0", // Hueso
+    color: "#e0e0e0",
     fontWeight: "bold",
   },
   linkText: {
     marginTop: 15,
-    textAlign: "center",
-    color: "#3d5146", // Verde claro
+    color: "#fff",
   },
-  backButton: {
-    position: "absolute",
-    top: 80,
-    left: 30,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#3d5146",
-    justifyContent: "center",
+  fieldText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginTop: 15,
+    color: "#2d3830",
+  },
+  inputError: {
+    borderColor: "#513D3D", // 🔴 Se pone rojo si hay un error
+  },
+  errorText: {
+    color: "#513D3D",
+  },
+  validationContainer: {
+    marginTop: 5,
+  },
+  validationItem: {
+    flexDirection: "row",
     alignItems: "center",
-    zIndex: 1,
+    marginTop: 5,
   },
-  backButtonIcon: {
-    color: "#e0e0e0",
-    fontSize: 30, // Aumenté el tamaño para mejor visibilidad
+  validationText: {
+    fontSize: 14,
+    color: "#2d3830",
+  },
+  validationIcon: {
+    width: 16,
+    height: 16,
+    marginRight: 5,
+    marginTop: 3,
   },
 });
 

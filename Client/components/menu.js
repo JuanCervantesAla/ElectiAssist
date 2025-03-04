@@ -6,7 +6,7 @@ const MenuOpciones = ({ icons, screens, iconStyle, containerStyle }) => {
     const navigation = useNavigation();
 
     return (
-        <View style={[styles.container, containerStyle, {gap:20}]}>
+        <View style={[styles.container, containerStyle]}>
             {icons.map((icon, index) => (
                 <React.Fragment key={index}>
                     <TouchableOpacity onPress={() => navigation.navigate(screens[index])}>
@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         flexWrap: 'wrap', 
         padding: 10,
+        borderWidth: 2,
+        borderColor:'#000',
+        borderRadius:40,
     },
     icon: {
         width: 50, 
@@ -34,7 +37,7 @@ const styles = StyleSheet.create({
     },
     verticalSeparator: {
         width: 2,
-        height: '100%',
+        height: '75%',
         backgroundColor: '#000',
         marginHorizontal: 10,
     },
