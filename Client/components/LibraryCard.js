@@ -4,7 +4,8 @@ import styles from '../styles/styles';
 
 const images = {
     bandera: require("../assets/bandera.png"),
-    votos: require("../assets/votos.png")
+    votos: require("../assets/votos.png"),
+    presidente: require("../assets/amlo.png")
   };
 
 const LibraryCard = ({imageKey, texto}) => {

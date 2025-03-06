@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface Political_PartyRepository extends JpaRepository<Political_Party, String> {
 
     Optional<Political_Party> findById(String id);
+    Optional<Political_Party> findByName(String name);
 
 }

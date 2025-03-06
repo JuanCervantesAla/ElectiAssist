@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   newsCard: {
     marginVertical: 10,
-    padding: 15,
+    padding: 10,
     backgroundColor: "#3D5146",
     borderRadius: 20,
     shadowColor: "#000",
@@ -111,13 +111,13 @@ const styles = StyleSheet.create({
     elevation: 3,
     width:'92%',
     marginLeft:16,
-    height:130,
+    height:120,
     marginTop:-10,
   },
   newsImage: {
     width: 40,
     height: 40,
-    marginLeft:135,
+    marginLeft:150,
   },
   newsTitle: {
     fontSize: 27,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   newsDescription: {
-    fontSize: 14,
+    fontSize: 13,
     color: "#ffffff",
     opacity: 0.8,
     textAlign: "center",
@@ -167,16 +167,17 @@ const styles = StyleSheet.create({
     marginTop:12,
   },
   chatButton: {
+    paddingTop:-30,
     alignItems: "center",
     backgroundColor:'#DCD7D3',
     height:120
   },
   chatIcon: {
-    width: 60,
-    height: 60,
+    width: 65,
+    height: 65,
   },
   libraryCard: {
-    width:160,
+    width:190,
     height:280,
   },
   libraryImage: {

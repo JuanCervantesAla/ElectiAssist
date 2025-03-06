@@ -1,14 +1,18 @@
 package com.exampleElecti.Electi.controller;
 
+import com.exampleElecti.Electi.model.ApiResponse;
 import com.exampleElecti.Electi.model.Political_Party;
+import com.exampleElecti.Electi.model.User;
 import com.exampleElecti.Electi.repository.Political_PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +21,7 @@ import java.util.Optional;
 public class Political_PartyController {
 
     private final Political_PartyRepository political_party_repository;
+    public static final String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     @Autowired
     public Political_PartyController(Political_PartyRepository politicalPartyRepository) {
@@ -33,5 +38,46 @@ public class Political_PartyController {
         Optional<Political_Party> political_party = political_party_repository.findById(id);
         return political_party.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(
+            @RequestParam("name") String name,
+            @RequestParam(value = "image", required = false) MultipartFile file) {
+
+        // Verifica si el partido político ya existe
+        if (political_party_repository.findByName(name).isPresent()) {
+            return new ResponseEntity<>(
+                    new ApiResponse("Ya se encuentra ese partido!"),
+                    HttpStatus.CONFLICT
+            );
+        }
+
+        // Crea un nuevo partido político
+        Political_Party partyToInsert = new Political_Party();
+        partyToInsert.setName(name);
+
+        // Si se proporciona una imagen, guárdala y establece la URL en el partido político
+        if (file != null && !file.isEmpty()) {
+            try {
+                Files.createDirectories(Paths.get(uploadDirectory));
+                String newName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+                Path fileNameAndPath = Paths.get(uploadDirectory, newName);
+                Files.write(fileNameAndPath, file.getBytes());
+                partyToInsert.setImage_url(fileNameAndPath.toString());
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Error al subir la imagen: " + e.getMessage());
+            }
+        }
+
+        // Guarda el partido político en la base de datos
+        political_party_repository.save(partyToInsert);
+
+        return new ResponseEntity<>(
+                new ApiResponse("Partido creado con éxito", partyToInsert),
+                HttpStatus.CREATED
+        );
+    }
+
 
 }

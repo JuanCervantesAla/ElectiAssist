@@ -32,6 +32,7 @@ public class ReadCandidateFromExcel {
                 candidate.setLevel(row.getCell(17).getStringCellValue());
                 candidate.setPosition(row.getCell(1).getStringCellValue());
                 candidate.setParty(row.getCell(0).getStringCellValue());
+                candidate.setState(row.getCell(2).getStringCellValue());
                 candidates.add(candidate);//Add the candidate to the list
 
             }

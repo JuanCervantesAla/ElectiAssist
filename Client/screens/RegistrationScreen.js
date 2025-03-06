@@ -10,7 +10,6 @@ import {
   Alert,
   Image,
 } from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
 import { useNavigation } from "@react-navigation/native";
 import InputField from "../components/InputField";
 import PasswordField from "../components/PasswordField";
@@ -28,8 +27,8 @@ const RegistrationScreen = () => {
   const [section, setSection] = useState("");
   const [age, setAge] = useState("");
   const [curp, setCurp] = useState("");
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // 👁 Estado de visibilidad
-  const [showPasswordErrors, setShowPasswordErrors] = useState(false); // ⬅️ Se muestran errores solo tras enviar
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
+  const [showPasswordErrors, setShowPasswordErrors] = useState(false); 
   const [passwordErrors, setPasswordErrors] = useState({
     minLength: false,
     upperCase: false,

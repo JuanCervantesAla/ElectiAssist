@@ -6,6 +6,8 @@ import HomeScreen from '../screens/HomeScreen';
 import MainScreen from '../screens/MainScreen';
 import ChatbotScreen from '../screens/ChatbotScreen';
 import TutorialScreen from '../screens/TutorialScreen.js';
+import BibliotecaCandidatos from '../screens/BibliotecaCandidatos';
+import BibliotecaPartidos from '../screens/BibliotecaPartidos';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +42,16 @@ const AppNavigator = () => {
       <Stack.Screen
         name="TutorialScreen"
         component={TutorialScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BibliotecaCandidatos"
+        component={BibliotecaCandidatos}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BibliotecaPartidos"
+        component={BibliotecaPartidos}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

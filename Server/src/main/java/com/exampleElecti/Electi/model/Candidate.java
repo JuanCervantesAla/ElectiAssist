@@ -36,6 +36,9 @@ public class Candidate {
     @Column(name = "party")
     private String party;
 
+    @Column(name = "state")
+    private String state;
+
     /********* RELATIONS*********/
     @OneToMany(mappedBy = "candidate")
     public List<Proposal> proposalList;
@@ -47,13 +50,14 @@ public class Candidate {
 
     /********* CONSTRUCTOR*********/
     public Candidate(){}
-    public Candidate(Long id_, String name_, Integer age_, String level_, String position_, String party_){
+    public Candidate(Long id_, String name_, Integer age_, String level_, String position_, String party_, String state_){
         this.id  = id_;
         this.name = name_;
         this.age = age_;
         this.level = level_;
         this.position = position_;
         this.party = party_;
+        this.state = state_;
     }
 
     /********* GETTERS&SETTERS*********/
@@ -105,4 +109,7 @@ public class Candidate {
         return party;
     }
 
+    public void setState(String state_){ this.state = state_;}
+
+    public String getState(){return state;}
 }

@@ -1,7 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Platform, ScrollView, Button, TouchableHighlight, StatusBar } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { useFonts, Montserrat_400Regular, Montserrat_700Bold } from '@expo-google-fonts/montserrat';
+import {SafeAreaView, ScrollView, StatusBar } from 'react-native';
 import styles from '../styles/styles'
 import Header from '../components/Header'
 import MainCards from '../components/MainCards'
