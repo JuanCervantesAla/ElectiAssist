@@ -14,6 +14,8 @@ const LoginScreen = () => {
   const { login, isLoading, error } = useAuth(); // Usamos el hook aquí
 
   const handleLogin = () => {
+    console.log(email);
+    console.log(password);//NO BORRAR ESTOS CONSOLE
     login(email, password); // Llamamos al login del hook
   };
 

@@ -36,7 +36,8 @@ public class SecurityConfig {
                                 "/api/images/upload/{id}",
                                 "/api/images/download/{id}",
                                 "/api/political_party/add",
-                                "/api/political_party"
+                                "/api/political_party",
+                                "/api/political_party/image/{id}"
                         ).permitAll()//Allow public to login
                         .anyRequest().authenticated()//Secure the rest of the endpoints
                 )

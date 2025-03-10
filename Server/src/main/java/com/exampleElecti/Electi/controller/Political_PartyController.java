@@ -79,5 +79,31 @@ public class Political_PartyController {
         );
     }
 
+    @GetMapping("/image/{id}")
+    public ResponseEntity<byte[]> getImageById(@PathVariable String id) {
+        Optional<Political_Party> political_party = political_party_repository.findById(id);
+
+        if (political_party.isEmpty() || political_party.get().getImage_url() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Path imagePath = Paths.get(political_party.get().getImage_url());
+
+            if (!Files.exists(imagePath)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            byte[] imageBytes = Files.readAllBytes(imagePath);
+            return ResponseEntity.ok()
+                    .header("Content-Type", Files.probeContentType(imagePath))
+                    .body(imageBytes);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+
 
 }
