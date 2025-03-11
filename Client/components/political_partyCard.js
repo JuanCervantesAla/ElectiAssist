@@ -24,7 +24,7 @@ const BibliotecaCandidatos = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
       <ScrollView contentContainerStyle={[styles.scrollContent, { backgroundColor: '#DCD7D3' }]}>
         <View style={stylesPartidos.container}>
-          <Text style={stylesPartidos.title}>Partidos</Text>
+          <Text style={[{color:'#fff'}]}>Hello</Text>
           <View style={styles.cardsContainer}>
             {politicalParties.map((party) => (
               <PoliticalPartyCard
@@ -44,22 +44,30 @@ const stylesPartidos = StyleSheet.create({
   container: {
     marginTop: 10,
     width: '100%',
-    height: 800,
+    minHeight: 900,
     backgroundColor: '#fff',
     borderRadius: 15,
+    alignItems: 'center',
+    marginBottom:50,
+    gap:15,
+    
   },
   title: {
     fontSize: 40,
     fontFamily: 'AbhayaLibreExtraBold',
-    marginLeft: 15,
     marginTop: 15,
     color: '#3D5146',
+    textAlign: 'center',
   },
   cardsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    flexDirection: 'row', 
+    flexWrap: 'wrap', 
+    justifyContent: 'center', 
+    alignItems: 'center',
+    width: '80%',
+    paddingHorizontal: 10,
   },
 });
+
 
 export default BibliotecaCandidatos;

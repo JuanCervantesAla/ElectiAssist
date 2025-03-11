@@ -41,7 +41,7 @@ public class UploadController {
     public static final String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
     @GetMapping("/download/{id}")
-    public ResponseEntity<Resource> getImage(@PathVariable Integer id){
+    public ResponseEntity<Resource> getImage(@PathVariable Long id){
         try{
 
             Optional<User> optionalUser = userRepository.findById(id);//Searches the user by Id
@@ -73,7 +73,7 @@ public class UploadController {
     }
 
     @PatchMapping("/upload/{id}")
-        public ResponseEntity<String> uploadImage(@RequestParam("image")MultipartFile file, @PathVariable Integer id){//Requesting the param of an image
+        public ResponseEntity<String> uploadImage(@RequestParam("image")MultipartFile file, @PathVariable Long id){//Requesting the param of an image
             try{
                 if(file.isEmpty()){//Validating the file isnt empty, if it is empty return error
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error al subirse la imagen");

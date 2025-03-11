@@ -3,37 +3,47 @@ import {SafeAreaView, ScrollView, StatusBar, View, StyleSheet, Text } from 'reac
 import styles from '../styles/styles';
 import Header from '../components/Header';
 import CardList from '../components/political_partyCard'
+import ChatButton from '../components/ChatButton';
 
 const BibliotecaCandidatos = () => {
-  return (
-    <SafeAreaView>
-        <StatusBar barStyle="dark-content" backgroundColor='#fff'></StatusBar>
-        <ScrollView contentContainerStyle={[styles.scrollContent, {backgroundColor:'#DCD7D3'}]}>
-            <Header/>
-            <View style={stylesPartidos.container}>
-                <CardList/>
-            </View>
-        </ScrollView>
-    </SafeAreaView>
-  );
-};
+    return (
+      <SafeAreaView>
+          <StatusBar barStyle="dark-content" backgroundColor='#fff' />
+          <ScrollView contentContainerStyle={[styles.scrollContent, { backgroundColor: '#DCD7D3', paddingBottom: -10 }]}>
+              <Header />
+              <Text style={stylesPartidos.title}>Partidos</Text>
+              <View style={stylesPartidos.container}>
+                    <CardList />
+              </View>
+  
+              <View style={{ height: 35 }} />
+  
+              <ChatButton />
+          </ScrollView>
+      </SafeAreaView>
+    );
+  };
+  
+  const stylesPartidos = StyleSheet.create({
+      container: {
+          marginLeft: 60,
+          marginTop: 15,
+          width: '70%',
+          height: 550,
+          backgroundColor: '#fff',
+          borderRadius: 15,
+          borderBottomRightRadius: 15,
+          marginBottom: 10,
+      },
+      title: {
+          fontSize: 40,
+          fontFamily: 'AbhayaLibreExtraBold',
+          marginLeft: 120,
+          marginTop: 15,
+          color: '#3D5146',
+          backgroundColor: '#DCD7D3',
+      },
+  });
+  
+  export default BibliotecaCandidatos;
 
-
-const stylesPartidos = StyleSheet.create({
-    container: {
-        marginTop:15,
-        width: '100%',
-        height: 800,
-        backgroundColor:'#fff',
-        borderRadius:15,
-    },
-    title: {
-        fontSize:40,
-        fontFamily: 'AbhayaLibreExtraBold',
-        marginLeft:15,
-        marginTop:15,
-        color:'#3D5146'
-    }
-});
-
-export default BibliotecaCandidatos

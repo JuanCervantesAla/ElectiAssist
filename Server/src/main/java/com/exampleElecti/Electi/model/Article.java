@@ -1,6 +1,5 @@
 package com.exampleElecti.Electi.model;
 
-
 import jakarta.persistence.*;
 
 /*
@@ -12,7 +11,7 @@ import jakarta.persistence.*;
 @Table(name = "ARTICLE")
 public class Article {
 
-    /********* ATTRIBUTES*********/
+    /********* ATTRIBUTES *********/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -20,25 +19,29 @@ public class Article {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "user_id")
-    private String user_id;
+    @Column(name = "description", length = 600)
+    private String description;
 
-    /********* RELATIONS*********/
+    @Column(name = "image_url")
+    private String image_url;
+
+    /********* RELATIONS *********/
     @ManyToOne
-    @JoinColumn(name = "fk_user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false) // Se mantiene la clave foránea
     private User user;
 
+    /********* CONSTRUCTORS *********/
+    public Article() {}
 
-    /********* CONSTRUCTOR*********/
-    public Article(){}
-
-    public Article(Long id_, String title_, String user_id_){
-        this.id = id_;
-        this.title = title_;
-        this.user_id = user_id_;
+    public Article(Long id, String title, User user, String description, String image_url) {
+        this.id = id;
+        this.title = title;
+        this.user = user;
+        this.description = description;
+        this.image_url = image_url;
     }
 
-    /********* GETTERS&SETTERS*********/
+    /********* GETTERS & SETTERS *********/
     public Long getId() {
         return id;
     }
@@ -55,11 +58,27 @@ public class Article {
         this.title = title;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public String getDescription() {
+        return description;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImage_url() {
+        return image_url;
+    }
+
+    public void setImage_url(String image_url) {
+        this.image_url = image_url;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

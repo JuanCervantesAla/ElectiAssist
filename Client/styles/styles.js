@@ -167,12 +167,15 @@ const styles = StyleSheet.create({
     marginTop:12,
   },
   chatButton: {
-    paddingTop:-30,
+    paddingTop:-40,
     alignItems: "center",
-    backgroundColor:'#DCD7D3',
-    height:120
+    backgroundColor:'#bab9b3',
+    height:100,
+    borderTopRightRadius:40,
+    borderTopLeftRadius:40,
   },
   chatIcon: {
+    marginTop:15,
     width: 65,
     height: 65,
   },

@@ -7,8 +7,9 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ArticleRepository extends JpaRepository<Article,String> {
+public interface ArticleRepository extends JpaRepository<Article,Long> {
 
-    Optional<Article> findById(String id);
+    Optional<Article> findById(Long id);
+    Optional<Article> findByTitle(String name);
 
 }

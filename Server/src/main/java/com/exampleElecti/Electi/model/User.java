@@ -1,6 +1,7 @@
 package com.exampleElecti.Electi.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
@@ -48,12 +49,15 @@ public class User {
 
     /********* RELATIONS*********/
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Chatbot_Interaction> chatbotInteractionList;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Article> articleList;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<User_Vote> userVotes;
 
 

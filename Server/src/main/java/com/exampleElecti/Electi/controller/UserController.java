@@ -42,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")//Find the user by their Id
-    public ResponseEntity<User> getUserId(@PathVariable String id){
+    public ResponseEntity<User> getUserId(@PathVariable Long id){
         Optional<User> user = userRepository.findById(id);
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -96,7 +96,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Integer id, @RequestBody User userDetails){
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails){
         return userRepository.findById(id)//In search of the user
                 .map(user -> {//Creates a new user setting the RequestBody details
                     user.setName(userDetails.getName());
@@ -112,7 +112,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteUser(@PathVariable Integer id){//Deletes the user using its id, (PathVariable takes it from the URI)
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id){//Deletes the user using its id, (PathVariable takes it from the URI)
         //Maps all the users on the repository to their id, finds the id, deletes it and return the response
         return userRepository.findById(id)
                 .map(user -> {
