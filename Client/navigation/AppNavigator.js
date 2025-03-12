@@ -9,6 +9,7 @@ import TutorialScreen from '../screens/TutorialScreen.js';
 import BibliotecaCandidatos from '../screens/BibliotecaCandidatos';
 import BibliotecaPartidos from '../screens/BibliotecaPartidos';
 import BibliotecaProcesos from '../screens/BibliotecaProcesos';
+import NewsScreen from '../screens/NewsScreen';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="BibliotecaProcesos"
         component={BibliotecaProcesos}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="NewsScreen"
+        component={NewsScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

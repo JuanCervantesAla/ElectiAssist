@@ -6,32 +6,35 @@ import { API_URL } from '@env';
 import ChatButton from '../components/ChatButton';
 import ArticleGrid from '../components/ArticleGrid';
 
-const BibliotecaProcesos = () => {
-    const [articles, setArticles] = useState([]);
+const NewsScreen = () => {
 
-    useEffect(() => {
-        fetch(`${API_URL}/api/article`)
-            .then((response) => response.json()) 
-            .then((data) => {
-        console.log("Datos obtenidos:", data);
-        setArticles(data); 
-    })
-    .catch((error) => {
-        console.error('Error al obtener los partidos:', error);
-    });
-  }, []);
+    const [news, setNews] = useState([]);
     
+        useEffect(() => {
+            fetch(`${API_URL}/api/news`)
+                .then((response) => response.json()) 
+                .then((data) => {
+            console.log("Datos obtenidos:", data);
+            setNews(data); 
+        })
+        .catch((error) => {
+            console.error('Error al obtener los partidos:', error);
+        });
+      }, []);
+
   return (
+
     <SafeAreaView>
-          <StatusBar barStyle="dark-content" backgroundColor='#fff' />
-          <ScrollView contentContainerStyle={[styles.scrollContent, { backgroundColor: '#DCD7D3', paddingBottom: -20, height:840 }]}>
-              <Header />
-              <ArticleGrid articles={articles} />
-              <View style={[{marginTop:25}]}>
+        <StatusBar barStyle="dark-content" backgroundColor='#fff' />
+        <ScrollView contentContainerStyle={[styles.scrollContent, { backgroundColor: '#DCD7D3', paddingBottom: -20, height:840 }]}>
+            <Header />
+            <ArticleGrid articles={news} />
+            <View style={[{marginTop:25}]}>
                 <ChatButton />
-              </View>
-          </ScrollView>
-      </SafeAreaView>
+            </View>
+        </ScrollView>
+    </SafeAreaView>
+
   );
 };
 
@@ -57,4 +60,4 @@ const stylesPartidos = StyleSheet.create({
     },
 });
 
-export default BibliotecaProcesos
+export default NewsScreen

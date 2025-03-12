@@ -1,15 +1,15 @@
-import React from 'react'
-import styles from '../styles/styles'
-import { View, Text, Image } from "react-native";
+import React from 'react';
+import { View, Text, Image, TouchableOpacity } from 'react-native';
+import styles from '../styles/styles';
 
-const NewsCard = () => {
+const NewsCard = ({ onPress }) => {
   return (
-    <View style={styles.newsCard}>
-        <Image source={require('../assets/informe.png')} style={styles.newsImage}></Image>
-        <Text style={styles.newsTitle}>Ultimas noticias</Text>
-        <Text style={styles.newsDescription}>Acerca de temas electorales</Text>
-    </View>
+    <TouchableOpacity style={styles.newsCard} onPress={onPress} activeOpacity={0.7}>
+      <Image source={require('../assets/informe.png')} style={styles.newsImage} />
+      <Text style={styles.newsTitle}>Últimas noticias</Text>
+      <Text style={styles.newsDescription}>Acerca de temas electorales</Text>
+    </TouchableOpacity>
   );
 };
 
-export default NewsCard
+export default NewsCard;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { API_URL } from '@env';
-import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity, requireNativeComponent } from 'react-native';
 
 const ArticleGrid = ({ articles }) => {
   if (!articles || articles.length === 0) return null;
@@ -30,6 +30,7 @@ const ArticleGrid = ({ articles }) => {
       />
 
       <TouchableOpacity style={styles.loadMoreButton}>
+        <Image source={require("../assets/circleplus.png")} style={styles.loadMoreImage} />
         <Text style={styles.loadMoreText}>Cargar Más</Text>
       </TouchableOpacity>
     </View>
@@ -39,9 +40,10 @@ const ArticleGrid = ({ articles }) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
-    height: '65%',
+    height: '77%',
   },
   mainArticle: {
+    marginTop:30,
     marginBottom: 30,
     borderRadius: 20,
     overflow: 'hidden',
@@ -97,6 +99,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loadMoreButton: {
+    width:'48%',
+    marginLeft:100,
     marginTop: 60,
     backgroundColor: '#D3D3D3',
     padding: 10,
@@ -107,6 +111,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+  },
+  loadMoreImage: {
+    width: '48%',
+    height: 70,
+    borderRadius: 8,
+    resizeMode:'contain',
   },
 });
 
