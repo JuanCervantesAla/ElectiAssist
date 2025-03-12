@@ -9,7 +9,7 @@ const { width } = Dimensions.get('window');
 
 const libraryItems = [
   { id: '1', imageKey: 'bandera', texto: 'Partidos', screen: 'BibliotecaPartidos'},
-  { id: '2', imageKey: 'votos', texto: 'Procesos' },
+  { id: '2', imageKey: 'votos', texto: 'Procesos', screen: 'BibliotecaProcesos' },
   { id: '3', imageKey: 'presidente', texto: 'Candidatos', screen: 'BibliotecaCandidatos' },
 ];
 

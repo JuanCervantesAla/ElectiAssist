@@ -8,6 +8,7 @@ import ChatbotScreen from '../screens/ChatbotScreen';
 import TutorialScreen from '../screens/TutorialScreen.js';
 import BibliotecaCandidatos from '../screens/BibliotecaCandidatos';
 import BibliotecaPartidos from '../screens/BibliotecaPartidos';
+import BibliotecaProcesos from '../screens/BibliotecaProcesos';
 
 const Stack = createStackNavigator();
 
@@ -52,6 +53,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="BibliotecaPartidos"
         component={BibliotecaPartidos}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="BibliotecaProcesos"
+        component={BibliotecaProcesos}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

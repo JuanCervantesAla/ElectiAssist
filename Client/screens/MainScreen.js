@@ -16,8 +16,8 @@ const MainScreen = () => {
                 <MainCards/>
                 <NewsCards/>
                 <LibrarySection/>
+                <ChatButton/>
             </ScrollView>
-            <ChatButton/>
         </SafeAreaView>
     );
 };
