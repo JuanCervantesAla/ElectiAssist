@@ -32,6 +32,8 @@ public class SecurityConfig {
                                 "/api/user/register",
                                 "/api/user/login",
                                 "/api/user",
+                                "/api/user/{id}",
+                                "/api/candidate",
                                 "/api/candidate/updateAll",
                                 "/api/images/upload/{id}",
                                 "/api/images/download/{id}",
@@ -43,7 +45,12 @@ public class SecurityConfig {
                                 "/api/article",
                                 "/api/news",
                                 "/api/news/add",
-                                "/api/news/image/{id}"
+                                "/api/news/image/{id}",
+                                "/api/casilla",
+                                "/api/casilla/updateAll",
+                                "/api/casilla/{section}/{state}/{type}",
+                                "/api/vote/add",
+                                "/api/vote/count_votes"
                         ).permitAll()//Allow public to login
                         .anyRequest().authenticated()//Secure the rest of the endpoints
                 )

@@ -1,41 +1,36 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  FlatList,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  FlatList,
+  Text,
   Animated,
+  TouchableOpacity,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { API_URL } from "@env";
-import { SafeAreaView } from "react-native-safe-area-context";
+import HeaderWithTitle from "../components/HeaderWithTitle";
+import InputField from "../components/InputField";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import BackButton from "../components/ButtonBack";
+import Header from "../components/Header";
 
-const ChatbotScreen = ({navigation}) => {
+const ChatbotScreen = () => {
+  const navigation = useNavigation();
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const flatListRef = useRef(null);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const handleBackPress = () => {
-    // Este ejemplo navega hacia atrás en la pila de navegación
-    navigation.goBack();
-  };
-
-   // Mensaje de bienvenida por defecto
-   useEffect(() => {
+  useEffect(() => {
     const defaultMessage = {
       id: Date.now(),
-      text: "Hola Soy ElectiBot, tu asistente virtual relacionado con las elecciones y la política en México. Estoy aquí para ayudarte a conocer a los candidatos, simular tu voto y responder cualquier pregunta que tengas sobre el proceso electoral. ¿En que puedo ayudarte hoy?",
+      text: "Hola Soy ElectiBot, tu asistente virtual relacionado con las elecciones y la política en México. Estoy aquí para ayudarte a conocer a los candidatos, simular tu voto y responder cualquier pregunta que tengas sobre el proceso electoral. ¿En qué puedo ayudarte hoy?",
       sender: "bot",
     };
-    setMessages([defaultMessage]); // Añadir mensaje de bienvenida al inicio
+    setMessages([defaultMessage]);
   }, []);
 
   const sendMessage = async () => {
@@ -45,7 +40,7 @@ const ChatbotScreen = ({navigation}) => {
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInputText("");
     setIsLoading(true);
-    console.log(`${API_URL}/api/chatbot/send`)
+
     try {
       const response = await fetch(`${API_URL}/api/chatbot/send`, {
         method: "POST",
@@ -79,98 +74,91 @@ const ChatbotScreen = ({navigation}) => {
     }, 100);
   }, [messages]);
 
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  }, [fadeAnim]);
-
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <SafeAreaView style={styles.safeArea}>
-      <BackButton onPress={handleBackPress} />
-        {/* Encabezado */}
-        <View style={styles.header}>
-          <Text style={styles.headerText}>ElectiBot</Text>
-        </View>
 
-        {/* Lista de mensajes */}
+      <Header />
+      {/* <View style={styles.headerContainer}>
+        <HeaderWithTitle
+          title="ElectiBot"
+          linkText="Volver"
+          onLinkPress={() => navigation.goBack()}
+        />
+      </View> */}
+
+      <View style={styles.chatContainer}>
         <FlatList
           ref={flatListRef}
           data={messages}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <Animated.View
+            <View
               style={[
                 item.sender === "user" ? styles.userMessage : styles.botMessage,
-                { opacity: fadeAnim },
               ]}
             >
-              <Text style={styles.messageText}>{item.text}</Text>
-            </Animated.View>
+              <Text
+                style={[
+                  styles.messageText,
+                  { color: item.sender === "bot" ? "#fff" : "#fff" },
+                ]}
+              >
+                {item.text}
+              </Text>
+            </View>
           )}
           contentContainerStyle={styles.messagesContainer}
         />
+      </View>
 
-        {/* Área de entrada de texto */}
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={inputText}
-            onChangeText={setInputText}
-            placeholder="Escribe un mensaje..."
-            placeholderTextColor="#999"
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={sendMessage}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Icon name="send" size={20} color="#fff" />
-            )}
-          </TouchableOpacity>
-        </View>
-      </SafeAreaView>
+      <View style={styles.inputContainer}>
+        <InputField
+          value={inputText}
+          onChangeText={setInputText}
+          placeholder="Escribe un mensaje..."
+          placeholderTextColor="#999"
+          style={styles.inputFieldChat}
+        />
+        <TouchableOpacity
+          style={styles.sendButton}
+          onPress={sendMessage}
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Icon name="send" size={24} color="#fff" />
+          )}
+        </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#E0E0E0",
   },
-  header: {
+  headerContainer: {
     backgroundColor: "#fff",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    alignItems: "center",
+    elevation: 1,
+    paddingBottom: 30,
   },
-  headerText: {
-    color: "#111111",
-    fontSize: 30,
-    fontWeight: "bold",
+  chatContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginBottom: 10,
   },
   messagesContainer: {
-    padding: 10,
+    paddingBottom: 20,
   },
   userMessage: {
     alignSelf: "flex-end",
-    backgroundColor: "#3d5146",
+    backgroundColor: "#513dx",
     borderRadius: 15,
     padding: 10,
     marginVertical: 5,
@@ -183,7 +171,7 @@ const styles = StyleSheet.create({
   },
   botMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#3D5146",
     borderRadius: 15,
     padding: 10,
     marginVertical: 5,
@@ -195,23 +183,21 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   messageText: {
-    color: "#fff",
+    fontSize: 16,
+    color:'#fff'
   },
   inputContainer: {
     flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     padding: 10,
     backgroundColor: "#fff",
     borderTopWidth: 1,
     borderTopColor: "#ccc",
   },
-  input: {
+  inputFieldChat: {
     flex: 1,
-    height: 50,
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 25,
-    paddingHorizontal: 15,
-    marginRight: 10,
+    marginRight: 10,    
   },
   sendButton: {
     justifyContent: "center",
@@ -220,10 +206,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: 50,
     height: 50,
-  },
-  sendButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
   },
 });
 

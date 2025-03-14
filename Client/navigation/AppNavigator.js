@@ -10,6 +10,11 @@ import BibliotecaCandidatos from '../screens/BibliotecaCandidatos';
 import BibliotecaPartidos from '../screens/BibliotecaPartidos';
 import BibliotecaProcesos from '../screens/BibliotecaProcesos';
 import NewsScreen from '../screens/NewsScreen';
+import CasillasScreen from '../screens/CasillasScreen';
+import MapsScreen from '../screens/MapsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import GraficasVoto from '../screens/GraficasVoto';
+import VotingScreen from '../screens/VotingScreen';
 
 const Stack = createStackNavigator();
 
@@ -64,6 +69,31 @@ const AppNavigator = () => {
       <Stack.Screen
         name="NewsScreen"
         component={NewsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="CasillasScreen"
+        component={CasillasScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MapsScreen"
+        component={MapsScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="GraficasVoto"
+        component={GraficasVoto}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="VotingScreen"
+        component={VotingScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

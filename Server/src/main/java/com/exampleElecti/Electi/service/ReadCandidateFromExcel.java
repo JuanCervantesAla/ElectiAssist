@@ -1,48 +1,67 @@
 package com.exampleElecti.Electi.service;
 
 import com.exampleElecti.Electi.model.Candidate;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import com.exampleElecti.Electi.model.Political_Party;
+import com.exampleElecti.Electi.repository.Political_PartyRepository;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
+@Service
 public class ReadCandidateFromExcel {
 
-    /*Reading all the candidates from Excel file, xls file*/
-    public List<Candidate> readCandidates (String filePath){
+    private final Political_PartyRepository politicalPartyRepository;
 
-        List<Candidate> candidates = new ArrayList<>();//All the incoming candidates
+    @Autowired
+    public ReadCandidateFromExcel(Political_PartyRepository politicalPartyRepository) {
+        this.politicalPartyRepository = politicalPartyRepository;
+    }
 
-        try(FileInputStream fileInput = new FileInputStream(new File(filePath));//Open the file
-            Workbook workbook = new HSSFWorkbook(fileInput)) { //Workbook where all the content is stored
-            Sheet sheet = workbook.getSheetAt(0);//Starting at workbook page1
-            for (Row row : sheet) {//Iterate through all the Rows
-                if (row.getRowNum() == 0) continue;//Skip row 0, titles and headers
+    public List<Candidate> readCandidates(String filePath) {
+        List<Candidate> candidates = new ArrayList<>();
 
-                Candidate candidate = new Candidate();//Creates a new Object template
-                candidate.setName(row.getCell(7).getStringCellValue());//Collects all the ifnromation from the columns
-                candidate.setAge((int) row.getCell(10).getNumericCellValue());
-                candidate.setLevel(row.getCell(17).getStringCellValue());
-                candidate.setPosition(row.getCell(1).getStringCellValue());
-                candidate.setParty(row.getCell(0).getStringCellValue());
-                candidate.setState(row.getCell(2).getStringCellValue());
-                candidates.add(candidate);//Add the candidate to the list
+        try (FileInputStream fileInput = new FileInputStream(new File(filePath));
+             Workbook workbook = new XSSFWorkbook(fileInput)) {
 
+            Sheet sheet = workbook.getSheetAt(0);
+
+            for (Row row : sheet) {
+                if (row.getRowNum() == 0) continue;
+
+                String partyName = row.getCell(0).getStringCellValue();
+                Optional<Political_Party> partyOptional = politicalPartyRepository.findByName(partyName);
+
+                if (partyOptional.isPresent()) {
+                    Political_Party party = partyOptional.get();
+
+                    Candidate candidate = new Candidate();
+                    candidate.setName(row.getCell(7).getStringCellValue());
+                    candidate.setAge((int) row.getCell(10).getNumericCellValue());
+                    candidate.setLevel(row.getCell(17).getStringCellValue());
+                    candidate.setPosition(row.getCell(1).getStringCellValue());
+                    candidate.setPolitical_party(party);
+                    candidate.setState(row.getCell(2).getStringCellValue());
+
+                    candidates.add(candidate);
+                } else {
+                    System.out.println("No se encontró el partido: " + partyName);
+                }
             }
 
-        } catch (Exception e){//
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
         return candidates;
-
     }
 }

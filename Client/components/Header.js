@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, Dimensions } from 'react-native';
+import { View, Text, Image, Dimensions, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from "@react-navigation/native";
 import { API_URL } from '@env';
 import styles from '../styles/styles';
 
 const { width } = Dimensions.get('window');
 
 const Header = () => {
+  const navigation = useNavigation();
   const [userImage, setUserImage] = useState(null);
   const [userId, setUserId] = useState(null);
 
@@ -34,10 +36,9 @@ const Header = () => {
         throw new Error(`Error en la respuesta del servidor: ${response.status}`);
       }
       
-      // Supón que la API devuelve la URL de la imagen como un string
       const imageUrl = await response.text();
   
-      setUserImage(imageUrl);  // Establece la URL de la imagen directamente
+      setUserImage(imageUrl); 
     } catch (error) {
       console.error("Error fetching user image:", error.message);
     }
@@ -49,10 +50,12 @@ const Header = () => {
     <View style={[styles.header, { width }]}>
       <Text style={[styles.headerText, { fontFamily: 'AbhayaLibreExtraBold' }]}>Electi</Text>
       <Text style={[styles.headerText2, { fontFamily: 'AbhayaLibreExtraBold', marginRight: 110 }]}>Assist</Text>
-      <Image
-        source={userImage ? { uri: `${API_URL}/api/images/download/${userId}` } : require("../assets/PP.png")}
-        style={styles.avatar}
-      />
+      <TouchableOpacity onPress={() => navigation.navigate("ProfileScreen")}>
+        <Image
+          source={userImage ? { uri: `${API_URL}/api/images/download/${userId}` } : require("../assets/PP.png")}
+          style={styles.avatar}
+        />
+      </TouchableOpacity>
     </View>
   );
 };

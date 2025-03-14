@@ -42,6 +42,7 @@ public class Political_PartyController {
     @PostMapping("/add")
     public ResponseEntity<?> add(
             @RequestParam("name") String name,
+            @RequestParam("long_name") String long_name,
             @RequestParam(value = "image", required = false) MultipartFile file) {
 
         // Verifica si el partido político ya existe
@@ -55,6 +56,7 @@ public class Political_PartyController {
         // Crea un nuevo partido político
         Political_Party partyToInsert = new Political_Party();
         partyToInsert.setName(name);
+        partyToInsert.setLong_name(long_name);
 
         // Si se proporciona una imagen, guárdala y establece la URL en el partido político
         if (file != null && !file.isEmpty()) {

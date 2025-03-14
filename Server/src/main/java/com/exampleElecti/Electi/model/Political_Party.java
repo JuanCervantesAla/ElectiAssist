@@ -22,6 +22,9 @@ public class Political_Party {
     @Column(name ="name")
     private String name;
 
+    @Column(name ="long_name")
+    private String long_name;
+
     @Column(name ="image_url")
     private String image_url;
 
@@ -31,10 +34,11 @@ public class Political_Party {
 
     /********* CONSTRUCTOR*********/
     public Political_Party(){}
-    public Political_Party(Long id_, String name_, String image_url_){
+    public Political_Party(Long id_, String name_, String image_url_, String long_name_){
         this.id = id_;
         this.name = name_;
         this.image_url = image_url_;
+        this.long_name = long_name_;
     }
 
     /********* GETTERS&SETTERS*********/
@@ -60,5 +64,13 @@ public class Political_Party {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public String getLong_name() {
+        return long_name;
+    }
+
+    public void setLong_name(String long_name) {
+        this.long_name = long_name;
     }
 }

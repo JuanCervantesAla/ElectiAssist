@@ -2,6 +2,7 @@ package com.exampleElecti.Electi.controller;
 
 import com.exampleElecti.Electi.model.Candidate;
 import com.exampleElecti.Electi.repository.CandidateRepository;
+import com.exampleElecti.Electi.repository.Political_PartyRepository;
 import com.exampleElecti.Electi.service.CandidateService;
 import com.exampleElecti.Electi.service.ReadCandidateFromExcel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +21,15 @@ import java.util.Optional;
 public class CandidateController {
 
     private final CandidateRepository candidateRepository;
+    private final Political_PartyRepository politicalPartyRepository;
 
     @Autowired
     private final CandidateService candidateService;
 
     @Autowired
-    public CandidateController(CandidateRepository candidateRepository, CandidateService candidateService) {
+    public CandidateController(CandidateRepository candidateRepository, Political_PartyRepository politicalPartyRepository, CandidateService candidateService) {
         this.candidateRepository = candidateRepository;
+        this.politicalPartyRepository = politicalPartyRepository;
         this.candidateService = candidateService;
     }
 
@@ -36,16 +39,16 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")//Find the user by their Id
-    public ResponseEntity<Candidate> getCandidateId(@PathVariable String id){
+    public ResponseEntity<Candidate> getCandidateId(@PathVariable Long id){
         Optional<Candidate> candidate = candidateRepository.findById(id);
         return candidate.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping("/updateAll")
     public ResponseEntity<String> updateAll(){
-        ReadCandidateFromExcel readCandidateFromExcel = new ReadCandidateFromExcel();
+        ReadCandidateFromExcel readCandidateFromExcel = new ReadCandidateFromExcel(politicalPartyRepository);
 
-        String filepath = "src/main/resources/candidates.xls";//Gets the path
+        String filepath = "src/main/resources/candidates.xlsx";//Gets the path
         List<Candidate> candidates = readCandidateFromExcel.readCandidates(filepath);//Return all the candidates
         candidateService.saveCandidates(candidates);
 

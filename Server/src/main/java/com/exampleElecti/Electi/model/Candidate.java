@@ -33,9 +33,6 @@ public class Candidate {
     @Column(name = "position")
     private String position;
 
-    @Column(name = "party")
-    private String party;
-
     @Column(name = "state")
     private String state;
 
@@ -43,21 +40,21 @@ public class Candidate {
     @OneToMany(mappedBy = "candidate")
     public List<Proposal> proposalList;
 
-//    @ManyToOne
-//    @JoinColumn(name = "fk_political_party_id", nullable = false)
-//    private Political_Party political_party;
+    @ManyToOne
+    @JoinColumn(name = "fk_political_party_id", nullable = false)
+    private Political_Party political_party;
 
 
     /********* CONSTRUCTOR*********/
     public Candidate(){}
-    public Candidate(Long id_, String name_, Integer age_, String level_, String position_, String party_, String state_){
+    public Candidate(Long id_, String name_, Integer age_, String level_, String position_, Political_Party political_party_, String state_){
         this.id  = id_;
         this.name = name_;
         this.age = age_;
         this.level = level_;
         this.position = position_;
-        this.party = party_;
         this.state = state_;
+        this.political_party = political_party_;
     }
 
     /********* GETTERS&SETTERS*********/
@@ -101,15 +98,15 @@ public class Candidate {
         this.position = position;
     }
 
-    public void setParty(String party_){
-        this.party = party_;
-    }
-
-    public String getParty(){
-        return party;
-    }
-
     public void setState(String state_){ this.state = state_;}
 
     public String getState(){return state;}
+
+    public Political_Party getPolitical_party() {
+        return political_party;
+    }
+
+    public void setPolitical_party(Political_Party political_party) {
+        this.political_party = political_party;
+    }
 }

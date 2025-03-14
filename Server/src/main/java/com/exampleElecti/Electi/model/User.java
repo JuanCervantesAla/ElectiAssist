@@ -58,7 +58,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonIgnore
-    private Set<User_Vote> userVotes;
+    private Set<UserVote> userVotes;
 
 
     /********* CONSTRUCTOR*********/
@@ -163,11 +163,11 @@ public class User {
         this.articleList = articleList;
     }
 
-    public Set<User_Vote> getUserVotes() {
+    public Set<UserVote> getUserVotes() {
         return userVotes;
     }
 
-    public void setUserVotes(Set<User_Vote> userVotes) {
+    public void setUserVotes(Set<UserVote> userVotes) {
         this.userVotes = userVotes;
     }
 }
