@@ -23,4 +23,12 @@ public interface UserVoteRepository extends JpaRepository<UserVote, Long> {
             "GROUP BY c.id, c.name, c.age, c.level, c.position, c.state, p.name")
     List<VoteCountDTO> countVotesByCandidate();
 
+    @Query("SELECT new com.exampleElecti.Electi.dto.VoteCountDTO(c.id, c.name, c.age, c.level, c.position, c.state, p.name, COUNT(uv.id)) " +
+            "FROM UserVote uv " +
+            "JOIN uv.candidate c " +
+            "JOIN c.political_party p " +
+            "WHERE c.position = :position AND c.state = :state " +
+            "GROUP BY c.id, c.name, c.age, c.level, c.position, c.state, p.name")
+    List<VoteCountDTO> findVotesByPositionAndState(String position, String state);
+
 }

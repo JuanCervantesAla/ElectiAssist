@@ -33,4 +33,11 @@ public class UserVoteController {
         List<VoteCountDTO> voteCounts = userVoteService.getVoteCountsWithPosition();
         return ResponseEntity.ok(voteCounts);
     }
+
+    @GetMapping("/count_votes/{position}/{state}")
+    public List<VoteCountDTO> getVotesByPositionAndState(
+            @PathVariable String position,
+            @PathVariable String state) {
+        return userVoteService.getVotesByPositionAndState(position, state);
+    }
 }

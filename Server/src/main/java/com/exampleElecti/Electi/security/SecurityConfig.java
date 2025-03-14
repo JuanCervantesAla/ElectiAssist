@@ -50,7 +50,8 @@ public class SecurityConfig {
                                 "/api/casilla/updateAll",
                                 "/api/casilla/{section}/{state}/{type}",
                                 "/api/vote/add",
-                                "/api/vote/count_votes"
+                                "/api/vote/count_votes",
+                                "/api/vote/count_votes/{position}/{state}"
                         ).permitAll()//Allow public to login
                         .anyRequest().authenticated()//Secure the rest of the endpoints
                 )

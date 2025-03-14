@@ -68,4 +68,8 @@ public class UserVoteService {
             return new VoteCountDTO(vote.getCandidateId(), candidateName, age, level, vote.getPosition(), state, party, vote.getVoteCount());
         }).collect(Collectors.toList());
     }
+
+    public List<VoteCountDTO> getVotesByPositionAndState(String position, String state) {
+        return userVoteRepository.findVotesByPositionAndState(position, state);
+    }
 }
