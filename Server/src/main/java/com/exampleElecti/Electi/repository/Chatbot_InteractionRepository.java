@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface Chatbot_InteractionRepository extends JpaRepository<Chatbot_Interaction,String> {
 
+    //Search in the database by the attribute provided
     Optional<Chatbot_Interaction> findById(String id);
 
 }

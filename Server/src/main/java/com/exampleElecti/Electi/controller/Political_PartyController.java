@@ -20,14 +20,17 @@ import java.util.Optional;
 @RequestMapping("/api/political_party")
 public class Political_PartyController {
 
+    //Repository and upload directory
     private final Political_PartyRepository political_party_repository;
     public static final String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
+    //Constructor
     @Autowired
     public Political_PartyController(Political_PartyRepository politicalPartyRepository) {
         political_party_repository = politicalPartyRepository;
     }
 
+    //Returns all the parties
     @GetMapping
     public List<Political_Party> political_parties(){
         return political_party_repository.findAll();
@@ -39,13 +42,13 @@ public class Political_PartyController {
         return political_party.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> add(
+    @PostMapping("/add")//Adds a new political party
+    public ResponseEntity<?> add(//Params
             @RequestParam("name") String name,
             @RequestParam("long_name") String long_name,
             @RequestParam(value = "image", required = false) MultipartFile file) {
 
-        // Verifica si el partido político ya existe
+        // Verifies if exist
         if (political_party_repository.findByName(name).isPresent()) {
             return new ResponseEntity<>(
                     new ApiResponse("Ya se encuentra ese partido!"),
@@ -53,14 +56,14 @@ public class Political_PartyController {
             );
         }
 
-        // Crea un nuevo partido político
+        // Creates a new party
         Political_Party partyToInsert = new Political_Party();
         partyToInsert.setName(name);
         partyToInsert.setLong_name(long_name);
 
-        // Si se proporciona una imagen, guárdala y establece la URL en el partido político
+        //If an image is retrieved
         if (file != null && !file.isEmpty()) {
-            try {
+            try {//Proccess to upload an image same as article controller
                 Files.createDirectories(Paths.get(uploadDirectory));
                 String newName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
                 Path fileNameAndPath = Paths.get(uploadDirectory, newName);
@@ -72,16 +75,16 @@ public class Political_PartyController {
             }
         }
 
-        // Guarda el partido político en la base de datos
+        // Saves the political party
         political_party_repository.save(partyToInsert);
 
         return new ResponseEntity<>(
-                new ApiResponse("Partido creado con éxito", partyToInsert),
+                new ApiResponse("Partido creado con éxito", partyToInsert),//Creates the party
                 HttpStatus.CREATED
         );
     }
 
-    @GetMapping("/image/{id}")
+    @GetMapping("/image/{id}")//Retrieves the image from the party if exists, sames as article controller
     public ResponseEntity<byte[]> getImageById(@PathVariable String id) {
         Optional<Political_Party> political_party = political_party_repository.findById(id);
 

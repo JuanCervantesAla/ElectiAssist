@@ -38,40 +38,32 @@ public class PythonService {
     public List<Candidate> candidateScraping(String path) {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder("python", path);
-            processBuilder.redirectErrorStream(false); // No mezclar stdout y stderr
+            processBuilder.redirectErrorStream(false); // Not mix stderr and stdout
 
-            // Iniciar proceso
+            // Begin the procces with the python file path
             Process process = processBuilder.start();
 
-            // Capturar stderr por separado (logs del script)
-//            try (BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
-//                String errorOutput = errorReader.lines().collect(Collectors.joining("\n"));
-//                if (!errorOutput.isEmpty()) {
-//                    System.err.println("Error en Python stderr:\n" + errorOutput);
-//                }
-//            }
-
-            // Capturar solo stdout (el JSON limpio)
+            // Gets the JSON only on stdout
             String output;
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
                 output = reader.lines().collect(Collectors.joining("\n"));
             }
 
-            // Esperar a que termine el proceso
+            // Wait till the process finish
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 throw new RuntimeException("Python script finalizó con código " + exitCode);
             }
 
-            // Verificar si la salida JSON es válida
+            // Verifies if the output is valid
             if (output.trim().isEmpty() || !output.trim().startsWith("[")) {
                 throw new RuntimeException("Salida del script no es JSON válido: " + output);
             }
 
-            // Mapear la salida JSON a lista de objetos Candidate
+            // Map the output to JSON
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            objectMapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true); // Permitir NaN
+            objectMapper.configure(JsonParser.Feature.ALLOW_NON_NUMERIC_NUMBERS, true); //Allow NaN
             return objectMapper.readValue(output, new TypeReference<List<Candidate>>() {});
 
 
@@ -79,7 +71,7 @@ public class PythonService {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return Collections.emptyList(); // Retornar lista vacía en caso de error
+            return Collections.emptyList(); // Return empty in case of error
         }
     }
 

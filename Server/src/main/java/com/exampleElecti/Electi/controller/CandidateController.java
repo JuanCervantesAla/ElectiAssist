@@ -44,15 +44,16 @@ public class CandidateController {
         return candidate.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/updateAll")
+    @GetMapping("/updateAll")//Using service Read from excel updates all the candidates
     public ResponseEntity<String> updateAll(){
         ReadCandidateFromExcel readCandidateFromExcel = new ReadCandidateFromExcel(politicalPartyRepository);
 
+        //Get the candidates
         String filepath = "src/main/resources/candidates.xlsx";//Gets the path
         List<Candidate> candidates = readCandidateFromExcel.readCandidates(filepath);//Return all the candidates
-        candidateService.saveCandidates(candidates);
+        candidateService.saveCandidates(candidates);//Save all the candidates
 
-        return new ResponseEntity<String>("Updated candidates", HttpStatus.OK);
+        return new ResponseEntity<String>("Updated candidates", HttpStatus.OK);//Status 200 ok
     }
 
 }

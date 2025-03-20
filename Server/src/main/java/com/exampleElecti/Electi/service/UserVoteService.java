@@ -30,18 +30,19 @@ public class UserVoteService {
         Optional<Candidate> candidate = candidateRepository.findById(candidateId);
 
         if (user.isPresent() && candidate.isPresent()) {
-            // Verificar si el usuario ya votó para esa posición
+            // Verifies if the user already voted
             if (userVoteRepository.existsByUserIdAndPosition(userId, position)) {
-                return false; // Ya votó en esta categoría
+                return false;
             }
 
             UserVote userVote = new UserVote(user.get(), candidate.get(), position);
             userVoteRepository.save(userVote);
             return true;
         }
-        return false; // Usuario o candidato no existen
+        return false; // User or candidate do not exist
     }
 
+    //Constructor
     public UserVoteService(UserVoteRepository userVoteRepository) {
         this.userVoteRepository = userVoteRepository;
     }
@@ -49,11 +50,12 @@ public class UserVoteService {
     public Map<Long, Long> getVoteCounts() {
         List<UserVote> votes = userVoteRepository.findAll();
 
-        // Contar los votos por candidato
+        // Count vote per candidate
         return votes.stream()
                 .collect(Collectors.groupingBy(vote -> vote.getCandidate().getId(), Collectors.counting()));
     }
 
+    //Get the votes with position
     public List<VoteCountDTO> getVoteCountsWithPosition() {
         List<VoteCountDTO> voteCounts = userVoteRepository.countVotesByCandidate();
 
@@ -69,6 +71,7 @@ public class UserVoteService {
         }).collect(Collectors.toList());
     }
 
+    //Get votes with the position and the state searching from repository
     public List<VoteCountDTO> getVotesByPositionAndState(String position, String state) {
         return userVoteRepository.findVotesByPositionAndState(position, state);
     }

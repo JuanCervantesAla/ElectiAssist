@@ -24,17 +24,20 @@ import java.util.Optional;
 @RequestMapping("/api/casilla")
 public class CasillaController {
 
+    //Repository
     private final CasillaRepository casillaRepository;
 
-    @Autowired
+
+    @Autowired//Service
     private final CasillaService casillaService;
 
+    //Constructor
     public CasillaController(CasillaRepository casillaRepository, CasillaService casillaService) {
         this.casillaRepository = casillaRepository;
         this.casillaService = casillaService;
     }
 
-    @GetMapping
+    @GetMapping//Returns all
     public List<Casilla> casillas(){//Returns all the candidates on the database
         return casillaRepository.findAll();
     }
@@ -45,20 +48,23 @@ public class CasillaController {
         return casilla.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    //Returns with a filter by the section number and the state in repository
     @GetMapping("/{section}/{state}/{type}")
     public ResponseEntity<Casilla> getCasillaSection(@PathVariable String section, @PathVariable String state, @PathVariable String type){
         Optional<Casilla> casillaOption = casillaRepository.findBySectionAndStateAndType(section, state, type);
         return casillaOption.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/updateAll")
+    @GetMapping("/updateAll")//Update all casillas from excel(polling stations)
     public ResponseEntity<String> updateAll(){
         ReadCasillasFromExcel readCasillasFromExcel = new ReadCasillasFromExcel();
 
+        //Read from the excel and gets a list of casillas with the read from excel service
         String filepath = "src/main/resources/casillas.xlsx";//Gets the path
         List<Casilla> casillas = readCasillasFromExcel.readCasillas(filepath);//Return all the candidates
         casillaService.saveCasilla(casillas);
 
+        //Return ok 200
         return new ResponseEntity<String>("Updated casillas", HttpStatus.OK);
     }
 

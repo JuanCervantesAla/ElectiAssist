@@ -10,19 +10,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
-
+/*
+*
+* Chatbot integration with stack
+* The AI answers about mexican political related topics
+*
+* */
 
 @RestController
 @RequestMapping("/api/chatbot")
 public class ChatbotController {
 
+    //Gets the service
     private final ChatbotService chatbotService;
 
+    //Constructor
     @Autowired
     public ChatbotController(ChatbotService chatbotService) {
         this.chatbotService = chatbotService;
     }
 
+    //Sends a request with a message to STACK.IO service = AI responses
     @PostMapping("/send")
     public ResponseEntity<Map<String, String>> sendMessage(@RequestBody Map<String, String> request) {
         //Take the message from the JSON

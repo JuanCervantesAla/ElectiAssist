@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface CasillaRepository extends JpaRepository<Casilla,Long> {
-
+    //Search in the database by the attribute provided
     Optional<Casilla> findById(Long id);
     Optional<Casilla> findBySection(String section);
     Optional<Casilla> findByState(String state);

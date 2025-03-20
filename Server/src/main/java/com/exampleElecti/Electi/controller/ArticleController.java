@@ -23,17 +23,18 @@ import java.util.Optional;
 @RequestMapping("/api/article")
 public class ArticleController {
 
+    //Repositories and uploadDirectory for image upload
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     public static final String uploadDirectory = System.getProperty("user.dir") + "/uploads";
 
-    @Autowired
+    @Autowired//Constructor
     public ArticleController(ArticleRepository articleRepository, UserRepository userRepository) {
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
     }
 
-    @GetMapping
+    @GetMapping//Returns all the articles
     public List<Article> articles(){//Returns all the users on the database
         return articleRepository.findAll();
     }
@@ -45,70 +46,71 @@ public class ArticleController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<?> add(
+    public ResponseEntity<?> add(//Request params to add an article
             @RequestParam("title") String title,
             @RequestParam("description") String description,
             @RequestParam("user_id") Long user_id,
             @RequestParam(value = "image", required = false) MultipartFile file) {
 
-        // Verifica si el artículo ya existe
+        //Verifies if the article exists
         if (articleRepository.findByTitle(title).isPresent()) {
             return new ResponseEntity<>(new ApiResponse("Ya se encuentra ese articulo!"), HttpStatus.CONFLICT);
         }
 
-        // Busca el usuario en la base de datos
+        //Finds user in database by repository search id
         User user = userRepository.findById(user_id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Crea un nuevo artículo
+        //Creates the new article
         Article articleToInsert = new Article();
         articleToInsert.setTitle(title);
         articleToInsert.setDescription(description);
         articleToInsert.setUser(user); // Asigna el usuario en lugar de un ID
 
-        // Manejo de imagen
+        // If files is not null and is not empty
         if (file != null && !file.isEmpty()) {
             try {
-                Files.createDirectories(Paths.get(uploadDirectory));
-                String newName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                Path fileNameAndPath = Paths.get(uploadDirectory, newName);
-                Files.write(fileNameAndPath, file.getBytes());
-                articleToInsert.setImage_url(fileNameAndPath.toString());
+                Files.createDirectories(Paths.get(uploadDirectory));//Gets the upload directory
+                String newName = System.currentTimeMillis() + "_" + file.getOriginalFilename();//Writes a new name
+                Path fileNameAndPath = Paths.get(uploadDirectory, newName);//Creates a path based on new Name and path
+                Files.write(fileNameAndPath, file.getBytes());//Writes the file from the path and the bytes
+                articleToInsert.setImage_url(fileNameAndPath.toString());//Set the image url to the article
             } catch (Exception e) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)//Throws and internal sever erro 500
                         .body("Error al subir la imagen: " + e.getMessage());
             }
         }
 
-        // Guarda el artículo
+        // Saves the article
         articleRepository.save(articleToInsert);
 
+        //Return created 201
         return new ResponseEntity<>(new ApiResponse("Articulo creado con éxito", articleToInsert), HttpStatus.CREATED);
     }
 
 
 
-    @GetMapping("/image/{id}")
+    @GetMapping("/image/{id}")//Retrieves the image based on the article ID
     public ResponseEntity<byte[]> getImageById(@PathVariable Long id) {
-        Optional<Article> article = articleRepository.findById(id);
+        Optional<Article> article = articleRepository.findById(id);//Finds the article by Id
 
-        if (article.isEmpty() || article.get().getImage_url() == null) {
+        if (article.isEmpty() || article.get().getImage_url() == null) {//If not found
             return ResponseEntity.notFound().build();
         }
 
         try {
-            Path imagePath = Paths.get(article.get().getImage_url());
+            Path imagePath = Paths.get(article.get().getImage_url());//Gets the image path
 
-            if (!Files.exists(imagePath)) {
+            if (!Files.exists(imagePath)) {//If file doesn't exist
                 return ResponseEntity.notFound().build();
             }
 
-            byte[] imageBytes = Files.readAllBytes(imagePath);
-            return ResponseEntity.ok()
+            byte[] imageBytes = Files.readAllBytes(imagePath);//Get bytes
+            return ResponseEntity.ok()//Set up the response entity with a content type and the imagebytes as response
                     .header("Content-Type", Files.probeContentType(imagePath))
                     .body(imageBytes);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)//Throws an error
                     .body(null);
         }
     }

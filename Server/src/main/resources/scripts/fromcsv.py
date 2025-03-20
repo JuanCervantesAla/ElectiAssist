@@ -5,13 +5,13 @@ import sys
 def convert():
     print("Iniciando procesamiento...", file=sys.stderr)
 
-    # Ruta del archivo Excel
+    # Excel file path
     csv_path = "C:/Users/juanj/Downloads/candidates.xls"
 
-    # Crear un DataFrame desde el archivo Excel
+    # Creats a data frame
     dataFrame = pd.read_excel(csv_path)
 
-    # Convertir el DataFrame a JSON
+    # From data frame to JSON
     filtered_data = [
         {
             "NOMBRE_CANDIDATO": item.get("NOMBRE_CANDIDATO"),
@@ -26,7 +26,7 @@ def convert():
         for item in dataFrame.to_dict(orient="records")
     ]
 
-    # Imprimir el JSON en sys.stdout (para que lo capture Java)
+    # Prints the JSON
     print(json.dumps(filtered_data, ensure_ascii=False))
 
 if __name__ == "__main__":

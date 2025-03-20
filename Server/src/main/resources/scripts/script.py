@@ -6,26 +6,26 @@ import tenseal as ts
 import sys
 import json
 
-# Configurar el contexto de TenSEAL (CKKS)
+# Config tenseal
 context = ts.context(ts.SCHEME_TYPE.CKKS, poly_modulus_degree=8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
 context.global_scale = 2**40
 context.generate_galois_keys()
 
-# Datos a encriptar
+# Data to encrypt
 data = sys.stdin.read().strip()
 
-dataList = json.loads(data)
+dataList = json.loads(data)//From json to list
 
-# Encriptar los datos
+# Encrypt data
 enc_data = ts.ckks_vector(context, dataList)
 
-# Operación homomórfica: multiplicación por 2
+# Homomorphic operation
 enc_result = enc_data * 89
 
-# Descifrar el resultado
+# Decrypt the data in case of
 dec_result = enc_result.decrypt()
 
 
 
-print("Datos originales:", data)
-print("Resultado cifrado:", dec_result)
+print("Original data:", data)
+print("Encrypted data:", dec_result)

@@ -11,10 +11,12 @@ import java.util.List;
 @Repository
 public interface UserVoteRepository extends JpaRepository<UserVote, Long> {
 
+    //Search in the database by the attribute provided
     boolean existsByUserIdAndPosition(Long userId, String position);
 
     List<UserVote> findByCandidateId(Long candidateId);
 
+    //Specific query to get votes from a candidate
     @Query("SELECT new com.exampleElecti.Electi.dto.VoteCountDTO(" +
             "c.id, c.name, c.age, c.level, c.position, c.state, p.name, COUNT(uv.id)) " +
             "FROM UserVote uv " +

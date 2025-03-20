@@ -1,6 +1,13 @@
 package com.exampleElecti.Electi.dto;
 
+/*
+*
+* Class used to save the votes same as userVote
+*
+* */
+
 public class VoteCountDTO {
+    //Attributes
     private Long candidateId;
     private String candidateName;
     private Integer age;
@@ -10,6 +17,7 @@ public class VoteCountDTO {
     private String party;
     private Long voteCount;
 
+    //Constructor
     public VoteCountDTO(Long candidateId, String candidateName, Integer age, String level, String position, String state, String party, Long voteCount) {
         this.candidateId = candidateId;
         this.candidateName = candidateName;
@@ -21,6 +29,7 @@ public class VoteCountDTO {
         this.voteCount = voteCount;
     }
 
+    //Getter and setters
     public Long getCandidateId() {
         return candidateId;
     }

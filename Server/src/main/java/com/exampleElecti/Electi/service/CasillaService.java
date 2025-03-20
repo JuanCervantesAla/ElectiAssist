@@ -14,7 +14,7 @@ public class CasillaService {
 
     @Autowired
     private CasillaRepository casillaRepository;
-
+    //Saves casillas
     public void saveCasilla(List<Casilla> casillas) {
         casillaRepository.saveAll(casillas);
     }

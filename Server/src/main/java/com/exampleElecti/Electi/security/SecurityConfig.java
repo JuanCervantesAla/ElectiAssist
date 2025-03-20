@@ -15,11 +15,15 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/*Config to secure all the endpoints*/
+
 @Configuration
 public class SecurityConfig {
 
+    //Authentication filter
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    //Constructor
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
@@ -28,7 +32,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http.csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
+                        .requestMatchers(//All the endpoints accesible
                                 "/api/user/register",
                                 "/api/user/login",
                                 "/api/user",

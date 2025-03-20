@@ -13,6 +13,7 @@ public class CandidateService {
     @Autowired
     private CandidateRepository candidateRepository;
 
+    //Saves candidates
     public void saveCandidates(List<Candidate> candidates) {
         candidateRepository.saveAll(candidates);
     }

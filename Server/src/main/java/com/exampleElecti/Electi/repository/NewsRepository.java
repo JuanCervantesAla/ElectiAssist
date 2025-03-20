@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface NewsRepository extends JpaRepository<News,Long> {
 
+    //Search in the database by the attribute provided
     Optional<News> findById(Long id);
     Optional<News> findByTitle(String name);
 

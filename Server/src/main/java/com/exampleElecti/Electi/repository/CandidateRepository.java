@@ -8,6 +8,7 @@ import java.util.Optional;
 
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
 
+    //Search in the database by id
     Optional<Candidate> findById(Long id);
 
 }

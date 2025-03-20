@@ -10,6 +10,7 @@ import java.util.Optional;
 @Repository
 public interface ProposalRepository extends JpaRepository<Proposal, String> {
 
+    //Search in the database by the attribute provided
     Optional<Proposal> findById(String id);
 
 }

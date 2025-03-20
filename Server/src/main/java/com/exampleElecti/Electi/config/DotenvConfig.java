@@ -20,9 +20,9 @@ public class DotenvConfig {
         //Create the instance of dotenv
         Dotenv dotenv = Dotenv.load();
 
-        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));
+        dotenv.entries().forEach(entry -> System.setProperty(entry.getKey(), entry.getValue()));//Get the key and value
 
-        return dotenv;
+        return dotenv;//Return the dotenv with te value
     }
 
 }
